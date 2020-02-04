@@ -1,4 +1,4 @@
-module ton-dice-web-server
+module github.com/tonradar/ton-dice-web-server
 
 go 1.13
 
