@@ -29,9 +29,9 @@ func (s *BetService) CreateBet(ctx context.Context, in *pb.CreateBetRequest) (*p
 		RollUnder:     int8(in.RollUnder),
 		RandomRoll:    int8(in.RandomRoll),
 		Seed:          in.Seed,
-		Signature:     in.Signature,
-		PlayerPayout:  in.PlayerPayout,
-		RefPayout:     in.RefPayout,
+		//Signature:     in.Signature,
+		//PlayerPayout:  in.PlayerPayout,
+		//RefPayout:     in.RefPayout,
 	}
 
 	resp, err := s.store.CreateBet(ctx, req)

@@ -19,13 +19,13 @@ type CreateBetReq struct {
 	RollUnder     int8   `sql:"roll_under"`
 	RandomRoll    int8   `sql:"random_roll"`
 	Seed          string `sql:"seed"`
-	Signature     string `sql:"signature"`
-	PlayerPayout  int64  `sql:"player_payout"`
-	RefPayout     int64  `sql:"ref_payout"`
+	//Signature     string `sql:"signature"`
+	//PlayerPayout  int64  `sql:"player_payout"`
+	//RefPayout     int64  `sql:"ref_payout"`
 }
 
 func (r CreateBetReq) Query() string {
-	return `INSERT INTO bets(game_id, player_address, ref_address, amount, roll_under, random_roll, seed, signature, player_payout, ref_payout, created_at) VALUES (@game_id, @player_address, @ref_address, @amount, @roll_under, @random_roll, @seed, @signature, @player_payout, @ref_payout, now()) RETURNING id, created_at`
+	return `INSERT INTO bets(game_id, player_address, ref_address, amount, roll_under, random_roll, seed, created_at) VALUES (@game_id, @player_address, @ref_address, @amount, @roll_under, @random_roll, @seed, now()) RETURNING id, created_at`
 }
 
 type CreateBetResp struct {
