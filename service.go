@@ -2,6 +2,7 @@ package bets
 
 import (
 	"context"
+	"fmt"
 	"github.com/golang/protobuf/ptypes"
 	"github.com/tonradar/ton-dice-web-server/storage"
 	"google.golang.org/grpc"
@@ -13,10 +14,10 @@ import (
 )
 
 type BetService struct {
-	store storage.Store
+	store *storage.SalStore
 }
 
-func NewBetService(store storage.Store) *BetService {
+func NewBetService(store *storage.SalStore) *BetService {
 	return &BetService{store: store}
 }
 
@@ -34,7 +35,9 @@ func (s *BetService) CreateBet(ctx context.Context, in *pb.CreateBetRequest) (*p
 		//RefPayout:     in.RefPayout,
 	}
 
-	resp, err := s.store.CreateBet(ctx, req)
+	fmt.Printf("req: %v:", req)
+
+	resp, err := s.store.CreateBet(context.Background(), req)
 	if err != nil {
 		return nil, err
 	}
