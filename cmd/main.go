@@ -3,14 +3,10 @@ package main
 import (
 	"database/sql"
 	_ "github.com/lib/pq"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/reflection"
+	"github.com/tonradar/ton-dice-web-server/bets"
+	"github.com/tonradar/ton-dice-web-server/storage"
+	"github.com/tonradar/ton-dice-web-server/webserver"
 	"log"
-	"net"
-	bets "ton-dice-web-server/proto"
-
-	service "ton-dice-web-server"
-	"ton-dice-web-server/storage"
 )
 
 func main() {
@@ -21,20 +17,15 @@ func main() {
 	}
 
 	store := storage.NewStore(db)
-	s := service.NewBetService(store)
-
-	listener, err := net.Listen("tcp", ":5300")
+	s := bets.NewBetService(store)
+	err = s.Init()
 	if err != nil {
-		log.Fatal("failed to listen: %v", err)
+		log.Fatal("failed to init storage: %v", err)
 	}
 
-	rpcserv := grpc.NewServer()
+	grpc := bets.NewGRPCServer(s)
+	go grpc.Start()
 
-	bets.RegisterBetsServer(rpcserv, s)
-	reflection.Register(rpcserv)
-
-	err = rpcserv.Serve(listener)
-	if err != nil {
-		log.Fatal("failed to serve", err)
-	}
+	server := webserver.NewWebserver(s)
+	server.Start()
 }
