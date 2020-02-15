@@ -2,7 +2,9 @@ package webserver
 
 import (
 	"context"
+	"github.com/cloudflare/cfssl/log"
 	"github.com/gin-gonic/gin"
+	api "github.com/tonradar/ton-api/proto"
 	"github.com/tonradar/ton-dice-web-server/storage"
 )
 
@@ -14,4 +16,16 @@ func (w *Webserver) GetAllBets(c *gin.Context) {
 	}
 
 	c.JSON(200, resp)
+}
+
+func (w *Webserver) GetBalance(c *gin.Context) {
+	address := c.Param("address")
+	getAccountStateRequest := &api.GetAccountStateRequest{
+		AccountAddress: address,
+	}
+	getAccountStateResponse, err := w.apiClient.GetAccountState(context.Background(), getAccountStateRequest)
+	if err != nil {
+		log.Errorf("Error get account state: %v", err)
+		return
+	}
 }
