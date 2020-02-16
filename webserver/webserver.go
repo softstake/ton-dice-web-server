@@ -11,7 +11,7 @@ import (
 type Webserver struct {
 	router     *gin.Engine
 	betService *bets.BetService
-	apiClient  *api.TonApiClient
+	apiClient  api.TonApiClient
 }
 
 func NewWebserver(s *bets.BetService) *Webserver {
@@ -19,7 +19,7 @@ func NewWebserver(s *bets.BetService) *Webserver {
 		grpc.WithInsecure(),
 	}
 
-	conn, err := grpc.Dial("127.0.0.1:5300", opts...)
+	conn, err := grpc.Dial("127.0.0.1:5400", opts...)
 	if err != nil {
 		log.Fatalf("fail to dial: %v", err)
 	}
@@ -31,7 +31,7 @@ func NewWebserver(s *bets.BetService) *Webserver {
 	return &Webserver{
 		router:     r,
 		betService: s,
-		apiClient:  &apiClient,
+		apiClient:  apiClient,
 	}
 }
 

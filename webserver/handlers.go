@@ -23,9 +23,16 @@ func (w *Webserver) GetBalance(c *gin.Context) {
 	getAccountStateRequest := &api.GetAccountStateRequest{
 		AccountAddress: address,
 	}
-	getAccountStateResponse, err := w.apiClient.GetAccountState(context.Background(), getAccountStateRequest)
+	getAccountStateResponse, err := w.apiClient.GetAccountState(c, getAccountStateRequest)
 	if err != nil {
 		log.Errorf("Error get account state: %v", err)
 		return
 	}
+
+	balance := getAccountStateResponse.Balance
+	response := map[string]interface{}{
+		"balance": balance,
+	}
+
+	c.JSON(200, response)
 }
