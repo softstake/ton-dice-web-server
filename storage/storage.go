@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-//go:generate salgen -destination=./client.go -package=~/go/src/ton-dice-web-server/storage ton-dice-web-server/storage Store
+//go:generate salgen -destination=./client.go -package=github.com/tonradar/ton-dice-web-server/storage github.com/tonradar/ton-dice-web-server/storage Store
 type Store interface {
 	Init(ctx context.Context, req *InitReq) error
 	CreateBet(ctx context.Context, req CreateBetReq) (*CreateBetResp, error)
@@ -35,7 +35,7 @@ func (r InitReq) Query() string {
 type GetAllBetsReq struct{}
 
 func (r GetAllBetsReq) Query() string {
-	return `SELECT * FROM bets`
+	return `SELECT * FROM bets ORDER BY id DESC`
 }
 
 type Bet struct {
