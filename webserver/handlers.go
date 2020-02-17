@@ -2,6 +2,7 @@ package webserver
 
 import (
 	"context"
+	"fmt"
 	"github.com/cloudflare/cfssl/log"
 	"github.com/gin-gonic/gin"
 	api "github.com/tonradar/ton-api/proto"
@@ -10,6 +11,21 @@ import (
 
 func (w *Webserver) GetAllBets(c *gin.Context) {
 	resp, err := w.betService.Store.GetAllBets(context.Background(), storage.GetAllBetsReq{})
+	if err != nil {
+		c.JSON(500, err)
+		return
+	}
+
+	c.JSON(200, resp)
+}
+
+func (w *Webserver) GetPlayerBets(c *gin.Context) {
+	address := c.Param("address")
+	req := storage.GetPlayerBetsReq{
+		PlayerAddress: address,
+	}
+	resp, err := w.betService.Store.GetPlayerBets(context.Background(), req)
+	fmt.Printf("err: %v", err)
 	if err != nil {
 		c.JSON(500, err)
 		return

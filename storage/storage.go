@@ -10,7 +10,7 @@ type Store interface {
 	Init(ctx context.Context, req *InitReq) error
 	CreateBet(ctx context.Context, req CreateBetReq) (*CreateBetResp, error)
 	GetAllBets(ctx context.Context, req GetAllBetsReq) (GetAllBetsResp, error)
-	//BetsByPlayer(ctx context.Context, req BetsByPlayerReq) ([]*BetsByPlayerResp, error)
+	GetPlayerBets(ctx context.Context, req GetPlayerBetsReq) (GetPlayerBetsResp, error)
 }
 
 type InitReq struct{}
@@ -76,3 +76,13 @@ type CreateBetResp struct {
 	ID        int64     `sql:"id"`
 	CreatedAt time.Time `sql:"created_at"`
 }
+
+type GetPlayerBetsReq struct {
+	PlayerAddress string `sql:"player_address"`
+}
+
+func (r *GetPlayerBetsReq) Query() string {
+	return "SELECT * FROM bets WHERE player_address=@player_address ORDER BY id DESC"
+}
+
+type GetPlayerBetsResp []*Bet

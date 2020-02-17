@@ -2,6 +2,7 @@ package webserver
 
 import (
 	"github.com/cloudflare/cfssl/log"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	api "github.com/tonradar/ton-api/proto"
 	"github.com/tonradar/ton-dice-web-server/bets"
@@ -36,6 +37,13 @@ func NewWebserver(s *bets.BetService) *Webserver {
 }
 
 func (w *Webserver) Start() {
+	//config := cors.DefaultConfig()
+	//config.AllowOrigins = []string{"http://localhost:8081"}
+	//w.router.Use(cors.New(config))
+
+	w.router.Use(cors.Default())
+
 	InitializeRoutes(w)
+
 	w.router.Run()
 }
