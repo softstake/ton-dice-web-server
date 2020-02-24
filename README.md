@@ -3,6 +3,7 @@ rest-api && storage
 
 ## build 
 ```MY_KEY=$(cat ~/.ssh/id_rsa)```
+
 ```docker build --build-arg SSH_PRIVATE_KEY="$MY_KEY" -t dice-server .```
 
 ## run
