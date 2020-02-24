@@ -1,12 +1,14 @@
 package webserver
 
 import (
+	"fmt"
 	"github.com/cloudflare/cfssl/log"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	api "github.com/tonradar/ton-api/proto"
 	"github.com/tonradar/ton-dice-web-server/bets"
 	"google.golang.org/grpc"
+	"os"
 )
 
 type Webserver struct {
@@ -16,11 +18,18 @@ type Webserver struct {
 }
 
 func NewWebserver(s *bets.BetService) *Webserver {
+	tonApiHost := os.Getenv("TON_API_HOST")
+	tonApiPort := os.Getenv("TON_API_PORT")
+
+	if tonApiHost == "" || tonApiPort == "" {
+		log.Fatal("Some of required ENV vars are empty. The vars are: TON_API_HOST, TON_API_PORT")
+	}
+
 	opts := []grpc.DialOption{
 		grpc.WithInsecure(),
 	}
 
-	conn, err := grpc.Dial("127.0.0.1:5400", opts...)
+	conn, err := grpc.Dial(fmt.Sprintf("%s:%s", tonApiHost, tonApiPort), opts...)
 	if err != nil {
 		log.Fatalf("fail to dial: %v", err)
 	}
@@ -45,5 +54,5 @@ func (w *Webserver) Start() {
 
 	InitializeRoutes(w)
 
-	w.router.Run()
+	w.router.Run("0.0.0.0:9999")
 }
