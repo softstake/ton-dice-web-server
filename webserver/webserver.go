@@ -9,6 +9,7 @@ import (
 	"github.com/tonradar/ton-dice-web-server/bets"
 	"google.golang.org/grpc"
 	"os"
+	"time"
 )
 
 type Webserver struct {
@@ -29,9 +30,18 @@ func NewWebserver(s *bets.BetService) *Webserver {
 		grpc.WithInsecure(),
 	}
 
-	conn, err := grpc.Dial(fmt.Sprintf("%s:%s", tonApiHost, tonApiPort), opts...)
-	if err != nil {
-		log.Fatalf("fail to dial: %v", err)
+	var err error
+	var conn *grpc.ClientConn
+
+	// waiting for the tonApi service to be ready
+	for {
+		conn, err = grpc.Dial(fmt.Sprintf("%s:%s", tonApiHost, tonApiPort), opts...)
+		if err != nil {
+			log.Infof("fail to dial: %v", err)
+			time.Sleep(3000 * time.Millisecond)
+			continue
+		}
+		break
 	}
 
 	apiClient := api.NewTonApiClient(conn)
