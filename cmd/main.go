@@ -9,6 +9,7 @@ import (
 	"github.com/tonradar/ton-dice-web-server/webserver"
 	"log"
 	"os"
+	"time"
 )
 
 func main() {
@@ -33,9 +34,15 @@ func main() {
 
 	store := storage.NewStore(db)
 	s := bets.NewBetService(store)
-	err = s.Init()
-	if err != nil {
-		log.Fatal("failed to init storage: %v", err)
+
+	for {
+		err = s.Init()
+		if err != nil {
+			log.Printf("failed to init storage: %v", err)
+			time.Sleep(3000 * time.Millisecond)
+			continue
+		}
+		break
 	}
 
 	grpc := bets.NewGRPCServer(s)
