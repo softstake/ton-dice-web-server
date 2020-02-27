@@ -38,7 +38,7 @@ func main() {
 	for {
 		err = s.Init()
 		if err != nil {
-			log.Printf("failed to init storage: %v", err)
+			log.Printf("failed to init storage: %v, retrying...", err)
 			time.Sleep(3000 * time.Millisecond)
 			continue
 		}

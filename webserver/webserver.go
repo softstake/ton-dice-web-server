@@ -37,7 +37,7 @@ func NewWebserver(s *bets.BetService) *Webserver {
 	for {
 		conn, err = grpc.Dial(fmt.Sprintf("%s:%s", tonApiHost, tonApiPort), opts...)
 		if err != nil {
-			log.Infof("fail to dial: %v", err)
+			log.Infof("fail to dial: %v, retrying...", err)
 			time.Sleep(3000 * time.Millisecond)
 			continue
 		}
