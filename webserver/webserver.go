@@ -9,7 +9,11 @@ import (
 	"github.com/tonradar/ton-dice-web-server/bets"
 	"google.golang.org/grpc"
 	"os"
-	"time"
+)
+
+var (
+	tonApiHost string
+	tonApiPort string
 )
 
 type Webserver struct {
@@ -19,8 +23,8 @@ type Webserver struct {
 }
 
 func NewWebserver(s *bets.BetService) *Webserver {
-	tonApiHost := os.Getenv("TON_API_HOST")
-	tonApiPort := os.Getenv("TON_API_PORT")
+	tonApiHost = os.Getenv("TON_API_HOST")
+	tonApiPort = os.Getenv("TON_API_PORT")
 
 	if tonApiHost == "" || tonApiPort == "" {
 		log.Fatal("Some of required ENV vars are empty. The vars are: TON_API_HOST, TON_API_PORT")
@@ -30,18 +34,9 @@ func NewWebserver(s *bets.BetService) *Webserver {
 		grpc.WithInsecure(),
 	}
 
-	var err error
-	var conn *grpc.ClientConn
-
-	// waiting for the tonApi service to be ready
-	for {
-		conn, err = grpc.Dial(fmt.Sprintf("%s:%s", tonApiHost, tonApiPort), opts...)
-		if err != nil {
-			log.Infof("fail to dial: %v, retrying...", err)
-			time.Sleep(3000 * time.Millisecond)
-			continue
-		}
-		break
+	conn, err := grpc.Dial(fmt.Sprintf("%s:%s", tonApiHost, tonApiPort), opts...)
+	if err != nil {
+		log.Fatalf("error dial: %v", err)
 	}
 
 	apiClient := api.NewTonApiClient(conn)

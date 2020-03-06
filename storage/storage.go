@@ -17,8 +17,8 @@ type InitReq struct{}
 
 func (r InitReq) Query() string {
 	return `create table IF NOT EXISTS bets (
-			id SERIAL PRIMARY KEY,
-			game_id INTEGER PRIMARY KEY not null,
+			id SERIAL not null,
+			game_id INTEGER not null,
 			player_address VARCHAR (48) not null,
 			ref_address VARCHAR (48) not null,
 			amount BIGINT not null,
@@ -28,7 +28,8 @@ func (r InitReq) Query() string {
 			signature text,
 			player_payout BIGINT,
 			ref_payout BIGINT,
-			created_at TIMESTAMP WITH TIME ZONE not null
+			created_at TIMESTAMP WITH TIME ZONE not null,
+			PRIMARY KEY(id, game_id)
 		)`
 }
 

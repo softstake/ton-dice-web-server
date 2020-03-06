@@ -21,6 +21,6 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o dice-server ./cmd
 FROM scratch
 COPY --from=builder /go/src/build/dice-server /app/
 WORKDIR /app
-EXPOSE 9999
+EXPOSE 9999 5300
 
 CMD ["./dice-server"]
