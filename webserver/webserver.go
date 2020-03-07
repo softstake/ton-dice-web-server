@@ -51,11 +51,11 @@ func NewWebserver(s *bets.BetService) *Webserver {
 }
 
 func (w *Webserver) Start() {
-	//config := cors.DefaultConfig()
-	//config.AllowOrigins = []string{"http://localhost:8081"}
-	//w.router.Use(cors.New(config))
+	config := cors.DefaultConfig()
+	config.AllowOrigins = []string{"http://ton777.io"}
+	w.router.Use(cors.New(config))
 
-	w.router.Use(cors.Default())
+	//w.router.Use(cors.Default())
 
 	InitializeRoutes(w)
 
