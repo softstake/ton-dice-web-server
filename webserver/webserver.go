@@ -52,7 +52,7 @@ func NewWebserver(s *bets.BetService) *Webserver {
 
 func (w *Webserver) Start() {
 	config := cors.DefaultConfig()
-	config.AllowOrigins = []string{"http://ton777.io"}
+	config.AllowOrigins = []string{"https://tonbet.io"}
 	w.router.Use(cors.New(config))
 
 	//w.router.Use(cors.Default())
