@@ -3,7 +3,6 @@ package webserver
 import (
 	"context"
 	"fmt"
-	"github.com/cloudflare/cfssl/log"
 	"github.com/gin-gonic/gin"
 	api "github.com/tonradar/ton-api/proto"
 	"github.com/tonradar/ton-dice-web-server/storage"
@@ -41,7 +40,7 @@ func (w *Webserver) GetBalance(c *gin.Context) {
 	}
 	getAccountStateResponse, err := w.apiClient.GetAccountState(c, getAccountStateRequest)
 	if err != nil {
-		log.Errorf("Error get account state: %v", err)
+		c.JSON(500, err)
 		return
 	}
 
