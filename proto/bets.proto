@@ -19,6 +19,8 @@ message CreateBetRequest {
     string signature = 8;
     int64 player_payout = 9;
     int64 ref_payout = 10;
+    string trx_hash = 11;
+    int64 trx_lt = 12;
 }
 
 message CreateBetResponse {

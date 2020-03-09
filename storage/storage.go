@@ -11,6 +11,7 @@ type Store interface {
 	CreateBet(ctx context.Context, req CreateBetReq) (*CreateBetResp, error)
 	GetAllBets(ctx context.Context, req GetAllBetsReq) (GetAllBetsResp, error)
 	GetPlayerBets(ctx context.Context, req GetPlayerBetsReq) (GetPlayerBetsResp, error)
+	GetBetByTrx(ctx context.Context, req GetBetByTrxReq) (GetBetByTrxResp, error)
 }
 
 type InitReq struct{}
@@ -24,11 +25,13 @@ func (r InitReq) Query() string {
 			amount BIGINT not null,
 			roll_under SMALLINT not null,
 			random_roll SMALLINT,
-			seed text,
-			signature text,
+			seed TEXT,
+			signature TEXT,
 			player_payout BIGINT,
 			ref_payout BIGINT,
 			created_at TIMESTAMP WITH TIME ZONE not null,
+			trx_hash TEXT not null,
+			trx_lt BIGINT not null,
 			PRIMARY KEY(id, game_id)
 		)`
 }
@@ -52,6 +55,8 @@ type Bet struct {
 	PlayerPayout  int64     `sql:"player_payout"`
 	RefPayout     int64     `sql:"ref_payout"`
 	CreatedAt     time.Time `sql:"created_at"`
+	TrxHash       string    `sql:"trx_hash"`
+	TrxLt         int64     `sql:"trx_lt"`
 }
 
 type GetAllBetsResp []*Bet
@@ -67,10 +72,12 @@ type CreateBetReq struct {
 	Signature     string `sql:"signature"`
 	PlayerPayout  int64  `sql:"player_payout"`
 	RefPayout     int64  `sql:"ref_payout"`
+	TrxHash       string `sql:"trx_hash"`
+	TrxLt         int64  `sql:"trx_lt"`
 }
 
 func (r CreateBetReq) Query() string {
-	return `INSERT INTO bets(game_id, player_address, ref_address, amount, roll_under, random_roll, seed, signature, player_payout, ref_payout, created_at) VALUES (@game_id, @player_address, @ref_address, @amount, @roll_under, @random_roll, @seed, @signature, @player_payout, @ref_payout, now()) RETURNING id, created_at`
+	return `INSERT INTO bets(game_id, player_address, ref_address, amount, roll_under, random_roll, seed, signature, player_payout, ref_payout, trx_hash, trx_lt, created_at) VALUES (@game_id, @player_address, @ref_address, @amount, @roll_under, @random_roll, @seed, @signature, @player_payout, @ref_payout, @trx_hash, @trx_lt, now()) RETURNING id, created_at`
 }
 
 type CreateBetResp struct {
@@ -87,3 +94,14 @@ func (r *GetPlayerBetsReq) Query() string {
 }
 
 type GetPlayerBetsResp []*Bet
+
+type GetBetByTrxReq struct {
+	TrxHash string `sql:"trx_hash"`
+	TrxLt   int64  `sql:"trx_lt"`
+}
+
+func (r *GetBetByTrxReq) Query() string {
+	return "SELECT * FROM bets WHERE trx_hash=@trx_hash AND trx_lt=@trx_lt"
+}
+
+type GetBetByTrxResp []*Bet

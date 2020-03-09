@@ -86,6 +86,8 @@ func (s *SalStore) CreateBet(ctx context.Context, req CreateBetReq) (*CreateBetR
 	reqMap.AppendTo("signature", &req.Signature)
 	reqMap.AppendTo("player_payout", &req.PlayerPayout)
 	reqMap.AppendTo("ref_payout", &req.RefPayout)
+	reqMap.AppendTo("trx_hash", &req.TrxHash)
+	reqMap.AppendTo("trx_lt", &req.TrxLt)
 
 	ctx = context.WithValue(ctx, sal.ContextKeyTxOpened, s.txOpened)
 	ctx = context.WithValue(ctx, sal.ContextKeyOperationType, "QueryRow")
@@ -196,6 +198,83 @@ func (s *SalStore) GetAllBets(ctx context.Context, req GetAllBetsReq) (GetAllBet
 		respMap.AppendTo("player_payout", &resp.PlayerPayout)
 		respMap.AppendTo("ref_payout", &resp.RefPayout)
 		respMap.AppendTo("created_at", &resp.CreatedAt)
+		respMap.AppendTo("trx_hash", &resp.TrxHash)
+		respMap.AppendTo("trx_lt", &resp.TrxLt)
+
+		dest := sal.GetDests(cols, respMap)
+
+		if err = rows.Scan(dest...); err != nil {
+			return nil, errors.Wrap(err, "failed to scan row")
+		}
+
+		list = append(list, &resp)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, errors.Wrap(err, "something failed during iteration")
+	}
+
+	return list, nil
+}
+
+func (s *SalStore) GetBetByTrx(ctx context.Context, req GetBetByTrxReq) (GetBetByTrxResp, error) {
+	var (
+		err      error
+		rawQuery = req.Query()
+		reqMap   = make(sal.RowMap)
+	)
+	reqMap.AppendTo("trx_hash", &req.TrxHash)
+	reqMap.AppendTo("trx_lt", &req.TrxLt)
+
+	ctx = context.WithValue(ctx, sal.ContextKeyTxOpened, s.txOpened)
+	ctx = context.WithValue(ctx, sal.ContextKeyOperationType, "Query")
+	ctx = context.WithValue(ctx, sal.ContextKeyMethodName, "GetBetByTrx")
+
+	pgQuery, args := sal.ProcessQueryAndArgs(rawQuery, reqMap)
+
+	stmt, err := s.ctrl.PrepareStmt(ctx, s.parent, s.handler, pgQuery)
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	for _, fn := range s.ctrl.BeforeQuery {
+		var fnz sal.FinalizerFunc
+		ctx, fnz = fn(ctx, rawQuery, req)
+		if fnz != nil {
+			defer func() { fnz(ctx, err) }()
+		}
+	}
+
+	rows, err := stmt.QueryContext(ctx, args...)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to execute Query")
+	}
+	defer rows.Close()
+
+	cols, err := rows.Columns()
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to fetch columns")
+	}
+
+	var list = make(GetBetByTrxResp, 0)
+
+	for rows.Next() {
+		var resp Bet
+		var respMap = make(sal.RowMap)
+		respMap.AppendTo("id", &resp.ID)
+		respMap.AppendTo("game_id", &resp.GameID)
+		respMap.AppendTo("player_address", &resp.PlayerAddress)
+		respMap.AppendTo("ref_address", &resp.RefAddress)
+		respMap.AppendTo("amount", &resp.Amount)
+		respMap.AppendTo("roll_under", &resp.RollUnder)
+		respMap.AppendTo("random_roll", &resp.RandomRoll)
+		respMap.AppendTo("seed", &resp.Seed)
+		respMap.AppendTo("signature", &resp.Signature)
+		respMap.AppendTo("player_payout", &resp.PlayerPayout)
+		respMap.AppendTo("ref_payout", &resp.RefPayout)
+		respMap.AppendTo("created_at", &resp.CreatedAt)
+		respMap.AppendTo("trx_hash", &resp.TrxHash)
+		respMap.AppendTo("trx_lt", &resp.TrxLt)
 
 		dest := sal.GetDests(cols, respMap)
 
@@ -268,6 +347,8 @@ func (s *SalStore) GetPlayerBets(ctx context.Context, req GetPlayerBetsReq) (Get
 		respMap.AppendTo("player_payout", &resp.PlayerPayout)
 		respMap.AppendTo("ref_payout", &resp.RefPayout)
 		respMap.AppendTo("created_at", &resp.CreatedAt)
+		respMap.AppendTo("trx_hash", &resp.TrxHash)
+		respMap.AppendTo("trx_lt", &resp.TrxLt)
 
 		dest := sal.GetDests(cols, respMap)
 
