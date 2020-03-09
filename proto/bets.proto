@@ -6,6 +6,7 @@ import "google/protobuf/timestamp.proto";
 
 service Bets {
     rpc CreateBet (CreateBetRequest) returns (CreateBetResponse) {}
+    rpc IsBetExist (IsBetExistRequest) returns (IsBetExistResponse) {}
 }
 
 message CreateBetRequest {
@@ -26,4 +27,14 @@ message CreateBetRequest {
 message CreateBetResponse {
     int64 id = 1;
     google.protobuf.Timestamp created_at = 2;
+}
+
+message IsBetExistRequest {
+    int32 game_id = 1;
+    string trx_hash = 2;
+    int64 trx_lt = 3;
+}
+
+message IsBetExistResponse {
+    bool yes = 1;
 }

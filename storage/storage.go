@@ -11,7 +11,7 @@ type Store interface {
 	CreateBet(ctx context.Context, req CreateBetReq) (*CreateBetResp, error)
 	GetAllBets(ctx context.Context, req GetAllBetsReq) (GetAllBetsResp, error)
 	GetPlayerBets(ctx context.Context, req GetPlayerBetsReq) (GetPlayerBetsResp, error)
-	GetBetByTrx(ctx context.Context, req GetBetByTrxReq) (GetBetByTrxResp, error)
+	GetBet(ctx context.Context, req GetBetReq) (GetBetResp, error)
 }
 
 type InitReq struct{}
@@ -95,13 +95,14 @@ func (r *GetPlayerBetsReq) Query() string {
 
 type GetPlayerBetsResp []*Bet
 
-type GetBetByTrxReq struct {
+type GetBetReq struct {
+	GameID  int32  `sql:"game_id"`
 	TrxHash string `sql:"trx_hash"`
 	TrxLt   int64  `sql:"trx_lt"`
 }
 
-func (r *GetBetByTrxReq) Query() string {
-	return "SELECT * FROM bets WHERE trx_hash=@trx_hash AND trx_lt=@trx_lt"
+func (r *GetBetReq) Query() string {
+	return "SELECT * FROM bets WHERE game_id=@game_id AND trx_hash=@trx_hash AND trx_lt=@trx_lt"
 }
 
-type GetBetByTrxResp []*Bet
+type GetBetResp []*Bet

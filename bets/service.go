@@ -52,3 +52,24 @@ func (s *BetService) CreateBet(ctx context.Context, in *pb.CreateBetRequest) (*p
 
 	return &pb.CreateBetResponse{Id: resp.ID, CreatedAt: pts}, nil
 }
+
+func (s *BetService) IsBetExist(ctx context.Context, in *pb.IsBetExistRequest) (*pb.IsBetExistResponse, error) {
+	req := storage.GetBetReq{
+		GameID:  in.GameId,
+		TrxHash: in.TrxHash,
+		TrxLt:   in.TrxLt,
+	}
+
+	resp, err := s.Store.GetBet(ctx, req)
+	if err != nil {
+		log.Printf("get bet failed with %s\n", err)
+		return nil, err
+	}
+
+	isBetExist := false
+	if len(resp) > 0 {
+		isBetExist = true
+	}
+
+	return &pb.IsBetExistResponse{Yes: isBetExist}, nil
+}

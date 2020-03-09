@@ -217,18 +217,19 @@ func (s *SalStore) GetAllBets(ctx context.Context, req GetAllBetsReq) (GetAllBet
 	return list, nil
 }
 
-func (s *SalStore) GetBetByTrx(ctx context.Context, req GetBetByTrxReq) (GetBetByTrxResp, error) {
+func (s *SalStore) GetBet(ctx context.Context, req GetBetReq) (GetBetResp, error) {
 	var (
 		err      error
 		rawQuery = req.Query()
 		reqMap   = make(sal.RowMap)
 	)
+	reqMap.AppendTo("game_id", &req.GameID)
 	reqMap.AppendTo("trx_hash", &req.TrxHash)
 	reqMap.AppendTo("trx_lt", &req.TrxLt)
 
 	ctx = context.WithValue(ctx, sal.ContextKeyTxOpened, s.txOpened)
 	ctx = context.WithValue(ctx, sal.ContextKeyOperationType, "Query")
-	ctx = context.WithValue(ctx, sal.ContextKeyMethodName, "GetBetByTrx")
+	ctx = context.WithValue(ctx, sal.ContextKeyMethodName, "GetBet")
 
 	pgQuery, args := sal.ProcessQueryAndArgs(rawQuery, reqMap)
 
@@ -256,7 +257,7 @@ func (s *SalStore) GetBetByTrx(ctx context.Context, req GetBetByTrxReq) (GetBetB
 		return nil, errors.Wrap(err, "failed to fetch columns")
 	}
 
-	var list = make(GetBetByTrxResp, 0)
+	var list = make(GetBetResp, 0)
 
 	for rows.Next() {
 		var resp Bet
