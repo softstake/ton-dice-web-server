@@ -1,6 +1,10 @@
 # ton-dice-web-server
 rest-api && storage
 
+TODO:
+    - change ssh key to access token in Dockerfile
+    - remove hardcode (domains, ports)
+    - 
 ## build 
 ```MY_KEY=$(cat ~/.ssh/id_rsa)```
 
