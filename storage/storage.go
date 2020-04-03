@@ -12,7 +12,8 @@ type Store interface {
 	UpdateBet(ctx context.Context, req UpdateBetReq) (*UpdateBetResp, error)
 	GetAllBets(ctx context.Context, req GetAllBetsReq) (GetAllBetsResp, error)
 	GetPlayerBets(ctx context.Context, req GetPlayerBetsReq) (GetPlayerBetsResp, error)
-	GetBet(ctx context.Context, req GetBetReq) (GetBetResp, error)
+	GetFetchedBet(ctx context.Context, req GetFetchedBetReq) (GetBetResp, error)
+	GetResolvedBet(ctx context.Context, req GetFetchedBetReq) (GetBetResp, error)
 }
 
 type InitReq struct{}
@@ -118,14 +119,24 @@ func (r *GetPlayerBetsReq) Query() string {
 
 type GetPlayerBetsResp []*Bet
 
-type GetBetReq struct {
-	GameID  int32  `sql:"game_id"`
-	TrxHash string `sql:"trx_hash"`
-	TrxLt   int64  `sql:"trx_lt"`
+type GetFetchedBetReq struct {
+	GameID        int32  `sql:"game_id"`
+	CreateTrxHash string `sql:"create_trx_hash"`
+	CreateTrxLt   int64  `sql:"create_trx_lt"`
 }
 
-func (r *GetBetReq) Query() string {
-	return "SELECT * FROM bets WHERE game_id=@game_id AND trx_hash=@trx_hash AND trx_lt=@trx_lt"
+func (r *GetFetchedBetReq) Query() string {
+	return "SELECT * FROM bets WHERE game_id=@game_id AND create_trx_hash=@create_trx_hash AND create_trx_lt=@create_trx_lt"
+}
+
+type GetResolvedBetReq struct {
+	GameID         int32  `sql:"game_id"`
+	ResolveTrxHash string `sql:"resolve_trx_hash"`
+	ResolveTrxLt   int64  `sql:"resolve_trx_lt"`
+}
+
+func (r *GetResolvedBetReq) Query() string {
+	return "SELECT * FROM bets WHERE game_id=@game_id AND resolve_trx_hash=@resolve_trx_hash AND resolve_trx_lt=@resolve_trx_lt"
 }
 
 type GetBetResp []*Bet

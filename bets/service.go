@@ -51,11 +51,37 @@ func (s *BetService) CreateBet(ctx context.Context, in *pb.CreateBetRequest) (*p
 	return &pb.CreateBetResponse{Id: resp.ID, CreatedAt: pts}, nil
 }
 
-func (s *BetService) IsBetExist(ctx context.Context, in *pb.IsBetExistRequest) (*pb.IsBetExistResponse, error) {
-	req := storage.GetBetReq{
-		GameID:  in.GameId,
-		TrxHash: in.TrxHash,
-		TrxLt:   in.TrxLt,
+func (s *BetService) UpdateBet(ctx context.Context, in *pb.UpdateBetRequest) (*pb.UpdateBetResponse, error) {
+	req := storage.UpdateBetReq{
+		ID:             in.Id,
+		GameID:         in.GameId,
+		RandomRoll:     int8(in.RandomRoll),
+		PlayerPayout:   in.PlayerPayout,
+		RefPayout:      in.RefPayout,
+		ResolveTrxHash: in.ResolveTrxHash,
+		ResolveTrxLt:   in.ResolveTrxLt,
+	}
+
+	resp, err := s.Store.UpdateBet(ctx, req)
+	if err != nil {
+		log.Printf("update bet in DB failed with %s\n", err)
+		return nil, err
+	}
+
+	pts, err := ptypes.TimestampProto(resp.ResolvedAt)
+	if err != nil {
+		return nil, err
+	}
+	log.Printf("bet with id %d successfully updated (date: %s)", resp.ID, resp.ResolvedAt)
+
+	return &pb.UpdateBetResponse{Id: resp.ID, ResolvedAt: pts}, nil
+}
+
+func (s *BetService) IsBetFetched(ctx context.Context, in *pb.IsBetFetchedRequest) (*pb.IsBetFetchedResponse, error) {
+	req := storage.GetFetchedBetReq{
+		GameID:        in.GameId,
+		CreateTrxHash: in.TrxHash,
+		CreateTrxLt:   in.TrxLt,
 	}
 
 	resp, err := s.Store.GetBet(ctx, req)
@@ -69,5 +95,26 @@ func (s *BetService) IsBetExist(ctx context.Context, in *pb.IsBetExistRequest) (
 		isBetExist = true
 	}
 
-	return &pb.IsBetExistResponse{Yes: isBetExist}, nil
+	return &pb.IsBetFetchedResponse{Yes: isBetExist}, nil
+}
+
+func (s *BetService) IsBetResolved(ctx context.Context, in *pb.IsBetResolvedRequest) (*pb.IsBetResolvedResponse, error) {
+	req := storage.GetResolvedBetReq{
+		GameID:         in.GameId,
+		ResolveTrxHash: in.TrxHash,
+		ResolveTrxLt:   in.TrxLt,
+	}
+
+	resp, err := s.Store.GetBet(ctx, req)
+	if err != nil {
+		log.Printf("get bet failed with %s\n", err)
+		return nil, err
+	}
+
+	isBetExist := false
+	if len(resp) > 0 {
+		isBetExist = true
+	}
+
+	return &pb.IsBetResolvedResponse{Yes: isBetExist}, nil
 }

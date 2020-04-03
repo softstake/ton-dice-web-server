@@ -7,7 +7,8 @@ import "google/protobuf/timestamp.proto";
 service Bets {
     rpc CreateBet (CreateBetRequest) returns (CreateBetResponse) {}
     rpc UpdateBet (UpdateBetRequest) returns (UpdateBetResponse) {}
-    rpc IsBetExist (IsBetExistRequest) returns (IsBetExistResponse) {}
+    rpc IsBetFetched (IsBetFetchedRequest) returns (IsBetFetchedResponse) {}
+    rpc IsBetResolved (IsBetResolvedRequest) returns (IsBetResolvedResponse) {}
 }
 
 message CreateBetRequest {
@@ -42,12 +43,22 @@ message UpdateBetResponse {
     google.protobuf.Timestamp resolved_at = 2;
 }
 
-message IsBetExistRequest {
+message IsBetFetchedRequest {
     int32 game_id = 1;
-    string trx_hash = 2;
-    int64 trx_lt = 3;
+    string create_trx_hash = 2;
+    int64 create_trx_lt = 3;
 }
 
-message IsBetExistResponse {
+message IsBetFetchedResponse {
+    bool yes = 1;
+}
+
+message IsBetResolvedRequest {
+    int32 game_id = 1;
+    string resolve_trx_hash = 2;
+    int64 resolve_trx_lt = 3;
+}
+
+message IsBetResolvedResponse {
     bool yes = 1;
 }
