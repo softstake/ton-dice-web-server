@@ -80,11 +80,11 @@ func (s *BetService) UpdateBet(ctx context.Context, in *pb.UpdateBetRequest) (*p
 func (s *BetService) IsBetFetched(ctx context.Context, in *pb.IsBetFetchedRequest) (*pb.IsBetFetchedResponse, error) {
 	req := storage.GetFetchedBetReq{
 		GameID:        in.GameId,
-		CreateTrxHash: in.TrxHash,
-		CreateTrxLt:   in.TrxLt,
+		CreateTrxHash: in.CreateTrxHash,
+		CreateTrxLt:   in.CreateTrxLt,
 	}
 
-	resp, err := s.Store.GetBet(ctx, req)
+	resp, err := s.Store.GetFetchedBet(ctx, req)
 	if err != nil {
 		log.Printf("get bet failed with %s\n", err)
 		return nil, err
@@ -101,11 +101,11 @@ func (s *BetService) IsBetFetched(ctx context.Context, in *pb.IsBetFetchedReques
 func (s *BetService) IsBetResolved(ctx context.Context, in *pb.IsBetResolvedRequest) (*pb.IsBetResolvedResponse, error) {
 	req := storage.GetResolvedBetReq{
 		GameID:         in.GameId,
-		ResolveTrxHash: in.TrxHash,
-		ResolveTrxLt:   in.TrxLt,
+		ResolveTrxHash: in.ResolveTrxHash,
+		ResolveTrxLt:   in.ResolveTrxLt,
 	}
 
-	resp, err := s.Store.GetBet(ctx, req)
+	resp, err := s.Store.GetResolvedBet(ctx, req)
 	if err != nil {
 		log.Printf("get bet failed with %s\n", err)
 		return nil, err

@@ -13,7 +13,7 @@ type Store interface {
 	GetAllBets(ctx context.Context, req GetAllBetsReq) (GetAllBetsResp, error)
 	GetPlayerBets(ctx context.Context, req GetPlayerBetsReq) (GetPlayerBetsResp, error)
 	GetFetchedBet(ctx context.Context, req GetFetchedBetReq) (GetBetResp, error)
-	GetResolvedBet(ctx context.Context, req GetFetchedBetReq) (GetBetResp, error)
+	GetResolvedBet(ctx context.Context, req GetResolvedBetReq) (GetBetResp, error)
 }
 
 type InitReq struct{}
