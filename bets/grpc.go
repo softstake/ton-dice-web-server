@@ -1,35 +1,40 @@
 package bets
 
 import (
+	"fmt"
+	"log"
+	"net"
+
+	"github.com/tonradar/ton-dice-web-server/config"
 	pb "github.com/tonradar/ton-dice-web-server/proto"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
-	"log"
-	"net"
 )
 
 type GRPCServer struct {
-	BetService *BetService
+	betsService *BetsService
+	config      *config.TonWebServerConfig
 }
 
-func NewGRPCServer(s *BetService) *GRPCServer {
+func NewGRPCServer(s *BetsService, cfg *config.TonWebServerConfig) *GRPCServer {
 	return &GRPCServer{
-		BetService: s,
+		betsService: s,
+		config:      cfg,
 	}
 }
 
 func (s *GRPCServer) Start() {
-	listener, err := net.Listen("tcp", ":5300")
+	listener, err := net.Listen("tcp", fmt.Sprint(":%d", s.config.RPCListenPort))
 	if err != nil {
-		log.Fatal("failed to listen: %v", err)
+		log.Fatal("failed to listen: ", err)
 	}
 
-	rpcserv := grpc.NewServer()
+	rpcServer := grpc.NewServer()
 
-	pb.RegisterBetsServer(rpcserv, pb.BetsServer(s.BetService))
-	reflection.Register(rpcserv)
+	pb.RegisterBetsServer(rpcServer, pb.BetsServer(s.betsService))
+	reflection.Register(rpcServer)
 
-	err = rpcserv.Serve(listener)
+	err = rpcServer.Serve(listener)
 	if err != nil {
 		log.Fatal("failed to serve", err)
 	}
