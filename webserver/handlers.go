@@ -3,13 +3,15 @@ package webserver
 import (
 	"context"
 	"fmt"
+
 	"github.com/gin-gonic/gin"
 	api "github.com/tonradar/ton-api/proto"
 	"github.com/tonradar/ton-dice-web-server/storage"
 )
 
 func (w *Webserver) GetAllBets(c *gin.Context) {
-	resp, err := w.betService.Store.GetAllBets(context.Background(), storage.GetAllBetsReq{})
+	req := storage.GetAllBetsReq{}
+	resp, err := w.betsService.Store.GetAllBets(context.Background(), req)
 	if err != nil {
 		c.JSON(500, err)
 		return
@@ -23,7 +25,7 @@ func (w *Webserver) GetPlayerBets(c *gin.Context) {
 	req := storage.GetPlayerBetsReq{
 		PlayerAddress: address,
 	}
-	resp, err := w.betService.Store.GetPlayerBets(context.Background(), req)
+	resp, err := w.betsService.Store.GetPlayerBets(context.Background(), req)
 	fmt.Printf("err: %v", err)
 	if err != nil {
 		c.JSON(500, err)

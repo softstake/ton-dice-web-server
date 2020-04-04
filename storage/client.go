@@ -216,7 +216,7 @@ func (s *SalStore) GetAllBets(ctx context.Context, req GetAllBetsReq) (GetAllBet
 	return list, nil
 }
 
-func (s *SalStore) GetFetchedBet(ctx context.Context, req GetFetchedBetReq) (GetBetResp, error) {
+func (s *SalStore) GetFetchedBet(ctx context.Context, req GetFetchedBetsReq) (GetFetchedBetsResp, error) {
 	var (
 		err      error
 		rawQuery = req.Query()
@@ -256,7 +256,7 @@ func (s *SalStore) GetFetchedBet(ctx context.Context, req GetFetchedBetReq) (Get
 		return nil, errors.Wrap(err, "failed to fetch columns")
 	}
 
-	var list = make(GetBetResp, 0)
+	var list = make(GetFetchedBetsResp, 0)
 
 	for rows.Next() {
 		var resp Bet
@@ -372,15 +372,15 @@ func (s *SalStore) GetPlayerBets(ctx context.Context, req GetPlayerBetsReq) (Get
 	return list, nil
 }
 
-func (s *SalStore) GetResolvedBet(ctx context.Context, req GetFetchedBetReq) (GetBetResp, error) {
+func (s *SalStore) GetResolvedBet(ctx context.Context, req GetResolvedBetsReq) (GetResolvedBetsResp, error) {
 	var (
 		err      error
 		rawQuery = req.Query()
 		reqMap   = make(sal.RowMap)
 	)
 	reqMap.AppendTo("game_id", &req.GameID)
-	reqMap.AppendTo("create_trx_hash", &req.CreateTrxHash)
-	reqMap.AppendTo("create_trx_lt", &req.CreateTrxLt)
+	reqMap.AppendTo("resolve_trx_hash", &req.ResolveTrxHash)
+	reqMap.AppendTo("resolve_trx_lt", &req.ResolveTrxLt)
 
 	ctx = context.WithValue(ctx, sal.ContextKeyTxOpened, s.txOpened)
 	ctx = context.WithValue(ctx, sal.ContextKeyOperationType, "Query")
@@ -412,7 +412,7 @@ func (s *SalStore) GetResolvedBet(ctx context.Context, req GetFetchedBetReq) (Ge
 		return nil, errors.Wrap(err, "failed to fetch columns")
 	}
 
-	var list = make(GetBetResp, 0)
+	var list = make(GetResolvedBetsResp, 0)
 
 	for rows.Next() {
 		var resp Bet

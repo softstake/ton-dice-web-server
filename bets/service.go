@@ -2,21 +2,27 @@ package bets
 
 import (
 	"context"
+	"log"
+
 	"github.com/golang/protobuf/ptypes"
+	"github.com/tonradar/ton-dice-web-server/config"
 	pb "github.com/tonradar/ton-dice-web-server/proto"
 	"github.com/tonradar/ton-dice-web-server/storage"
-	"log"
 )
 
-type BetService struct {
-	Store *storage.SalStore
+type BetsService struct {
+	Store  *storage.SalStore
+	config *config.TonWebServerConfig
 }
 
-func NewBetService(store *storage.SalStore) *BetService {
-	return &BetService{Store: store}
+func NewBetsService(store *storage.SalStore, cfg *config.TonWebServerConfig) *BetsService {
+	return &BetsService{
+		Store:  store,
+		config: cfg,
+	}
 }
 
-func (s *BetService) Init() error {
+func (s *BetsService) Init() error {
 	err := s.Store.Init(context.Background(), &storage.InitReq{})
 	if err != nil {
 		return err
@@ -24,7 +30,8 @@ func (s *BetService) Init() error {
 	return nil
 }
 
-func (s *BetService) CreateBet(ctx context.Context, in *pb.CreateBetRequest) (*pb.CreateBetResponse, error) {
+// CreateBet - used by GRPC
+func (s *BetsService) CreateBet(ctx context.Context, in *pb.CreateBetRequest) (*pb.CreateBetResponse, error) {
 	req := storage.CreateBetReq{
 		GameID:        in.GameId,
 		PlayerAddress: in.PlayerAddress,
@@ -51,7 +58,8 @@ func (s *BetService) CreateBet(ctx context.Context, in *pb.CreateBetRequest) (*p
 	return &pb.CreateBetResponse{Id: resp.ID, CreatedAt: pts}, nil
 }
 
-func (s *BetService) UpdateBet(ctx context.Context, in *pb.UpdateBetRequest) (*pb.UpdateBetResponse, error) {
+// UpdateBet - used by GRPC
+func (s *BetsService) UpdateBet(ctx context.Context, in *pb.UpdateBetRequest) (*pb.UpdateBetResponse, error) {
 	req := storage.UpdateBetReq{
 		ID:             in.Id,
 		GameID:         in.GameId,
@@ -77,14 +85,15 @@ func (s *BetService) UpdateBet(ctx context.Context, in *pb.UpdateBetRequest) (*p
 	return &pb.UpdateBetResponse{Id: resp.ID, ResolvedAt: pts}, nil
 }
 
-func (s *BetService) IsBetFetched(ctx context.Context, in *pb.IsBetFetchedRequest) (*pb.IsBetFetchedResponse, error) {
-	req := storage.GetFetchedBetReq{
+// IsBetFetched - used by GRPC
+func (s *BetsService) IsBetFetched(ctx context.Context, in *pb.IsBetFetchedRequest) (*pb.IsBetFetchedResponse, error) {
+	req := storage.GetFetchedBetsReq{
 		GameID:        in.GameId,
-		CreateTrxHash: in.TrxHash,
-		CreateTrxLt:   in.TrxLt,
+		CreateTrxHash: in.CreateTrxHash,
+		CreateTrxLt:   in.CreateTrxLt,
 	}
 
-	resp, err := s.Store.GetBet(ctx, req)
+	resp, err := s.Store.GetFetchedBet(ctx, req)
 	if err != nil {
 		log.Printf("get bet failed with %s\n", err)
 		return nil, err
@@ -98,14 +107,15 @@ func (s *BetService) IsBetFetched(ctx context.Context, in *pb.IsBetFetchedReques
 	return &pb.IsBetFetchedResponse{Yes: isBetExist}, nil
 }
 
-func (s *BetService) IsBetResolved(ctx context.Context, in *pb.IsBetResolvedRequest) (*pb.IsBetResolvedResponse, error) {
-	req := storage.GetResolvedBetReq{
+// IsBetResolved - used by GRPC
+func (s *BetsService) IsBetResolved(ctx context.Context, in *pb.IsBetResolvedRequest) (*pb.IsBetResolvedResponse, error) {
+	req := storage.GetResolvedBetsReq{
 		GameID:         in.GameId,
-		ResolveTrxHash: in.TrxHash,
-		ResolveTrxLt:   in.TrxLt,
+		ResolveTrxHash: in.ResolveTrxHash,
+		ResolveTrxLt:   in.ResolveTrxLt,
 	}
 
-	resp, err := s.Store.GetBet(ctx, req)
+	resp, err := s.Store.GetResolvedBet(ctx, req)
 	if err != nil {
 		log.Printf("get bet failed with %s\n", err)
 		return nil, err

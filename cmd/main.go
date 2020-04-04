@@ -3,40 +3,35 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"log"
+	"time"
+
 	_ "github.com/lib/pq"
 	"github.com/tonradar/ton-dice-web-server/bets"
+	"github.com/tonradar/ton-dice-web-server/config"
 	"github.com/tonradar/ton-dice-web-server/storage"
 	"github.com/tonradar/ton-dice-web-server/webserver"
-	"log"
-	"os"
-	"time"
 )
 
 func main() {
-	pgHost := os.Getenv("PG_HOST")
-	pgPort := os.Getenv("PG_PORT")
-	pgName := os.Getenv("PG_NAME")
-	pgUser := os.Getenv("PG_USER")
-	pgPwd := os.Getenv("PG_PWD")
 
-	if pgHost == "" || pgPort == "" || pgName == "" || pgUser == "" || pgPwd == "" {
-		log.Fatalln("Some of required ENV vars are empty. The vars are: PG_HOST, PG_PORT, PG_NAME, PG_USER, PG_PWD")
-	}
+	cfg := config.GetConfig()
 
-	psqlInfo := fmt.Sprintf("host=%s port=%s user=%s "+
+	pgConnString := fmt.Sprintf("host=%s port=%d user=%s "+
 		"password=%s dbname=%s sslmode=disable",
-		pgHost, pgPort, pgUser, pgPwd, pgName)
+		cfg.PgHost, cfg.PgPort, cfg.PgUser, cfg.PgPwd, cfg.PgName)
 
-	db, err := sql.Open("postgres", psqlInfo)
+	db, err := sql.Open("postgres", pgConnString)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	store := storage.NewStore(db)
-	s := bets.NewBetService(store)
+
+	betsService := bets.NewBetsService(store, &cfg)
 
 	for {
-		err = s.Init()
+		err = betsService.Init()
 		if err != nil {
 			log.Printf("failed to init storage: %v, retrying...", err)
 			time.Sleep(3000 * time.Millisecond)
@@ -45,9 +40,9 @@ func main() {
 		break
 	}
 
-	grpc := bets.NewGRPCServer(s)
-	go grpc.Start()
+	gRPCServer := bets.NewGRPCServer(betsService, &cfg)
+	go gRPCServer.Start()
 
-	server := webserver.NewWebserver(s)
-	server.Start()
+	webServer := webserver.NewWebserver(betsService, &cfg)
+	webServer.Start()
 }

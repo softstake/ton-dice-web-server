@@ -18,6 +18,7 @@ WORKDIR /go/src/build
 ADD . .
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o dice-server ./cmd
 
+
 FROM scratch
 COPY --from=builder /go/src/build/dice-server /app/
 WORKDIR /app

@@ -2,13 +2,14 @@ package webserver
 
 import (
 	"fmt"
+
 	"github.com/cloudflare/cfssl/log"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	api "github.com/tonradar/ton-api/proto"
 	"github.com/tonradar/ton-dice-web-server/bets"
+	"github.com/tonradar/ton-dice-web-server/config"
 	"google.golang.org/grpc"
-	"os"
 )
 
 var (
@@ -17,24 +18,18 @@ var (
 )
 
 type Webserver struct {
-	router     *gin.Engine
-	betService *bets.BetService
-	apiClient  api.TonApiClient
+	router      *gin.Engine
+	betsService *bets.BetsService
+	apiClient   api.TonApiClient
+	config      *config.TonWebServerConfig
 }
 
-func NewWebserver(s *bets.BetService) *Webserver {
-	tonApiHost = os.Getenv("TON_API_HOST")
-	tonApiPort = os.Getenv("TON_API_PORT")
-
-	if tonApiHost == "" || tonApiPort == "" {
-		log.Fatal("Some of required ENV vars are empty. The vars are: TON_API_HOST, TON_API_PORT")
-	}
-
+func NewWebserver(s *bets.BetsService, cfg *config.TonWebServerConfig) *Webserver {
 	opts := []grpc.DialOption{
 		grpc.WithInsecure(),
 	}
 
-	conn, err := grpc.Dial(fmt.Sprintf("%s:%s", tonApiHost, tonApiPort), opts...)
+	conn, err := grpc.Dial(fmt.Sprintf("%s:%s", cfg.TonAPIHost, cfg.TonAPIPort), opts...)
 	if err != nil {
 		log.Fatalf("error dial: %v", err)
 	}
@@ -44,20 +39,20 @@ func NewWebserver(s *bets.BetService) *Webserver {
 	r := gin.Default()
 
 	return &Webserver{
-		router:     r,
-		betService: s,
-		apiClient:  apiClient,
+		router:      r,
+		betsService: s,
+		apiClient:   apiClient,
+		config:      cfg,
 	}
 }
 
 func (w *Webserver) Start() {
 	config := cors.DefaultConfig()
-	config.AllowOrigins = []string{"https://tonbet.io"}
+	config.AllowOrigins = []string{w.config.WebDomain}
 	w.router.Use(cors.New(config))
-
 	//w.router.Use(cors.Default())
 
 	InitializeRoutes(w)
-
-	w.router.Run("0.0.0.0:9999")
+	listenAddr := fmt.Sprintf("0.0.0.0:%d", w.config.WebListenPort)
+	w.router.Run(listenAddr)
 }
