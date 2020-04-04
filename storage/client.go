@@ -372,15 +372,15 @@ func (s *SalStore) GetPlayerBets(ctx context.Context, req GetPlayerBetsReq) (Get
 	return list, nil
 }
 
-func (s *SalStore) GetResolvedBet(ctx context.Context, req GetFetchedBetReq) (GetBetResp, error) {
+func (s *SalStore) GetResolvedBet(ctx context.Context, req GetResolvedBetReq) (GetBetResp, error) {
 	var (
 		err      error
 		rawQuery = req.Query()
 		reqMap   = make(sal.RowMap)
 	)
 	reqMap.AppendTo("game_id", &req.GameID)
-	reqMap.AppendTo("create_trx_hash", &req.CreateTrxHash)
-	reqMap.AppendTo("create_trx_lt", &req.CreateTrxLt)
+	reqMap.AppendTo("resolve_trx_hash", &req.ResolveTrxHash)
+	reqMap.AppendTo("resolve_trx_lt", &req.ResolveTrxLt)
 
 	ctx = context.WithValue(ctx, sal.ContextKeyTxOpened, s.txOpened)
 	ctx = context.WithValue(ctx, sal.ContextKeyOperationType, "Query")
