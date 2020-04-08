@@ -99,12 +99,14 @@ func (s *BetsService) IsBetFetched(ctx context.Context, in *pb.IsBetFetchedReque
 		return nil, err
 	}
 
+	var betID int64
 	isBetExist := false
 	if len(resp) > 0 {
+		betID = resp[0].ID
 		isBetExist = true
 	}
 
-	return &pb.IsBetFetchedResponse{Yes: isBetExist, Id: resp[0].ID}, nil
+	return &pb.IsBetFetchedResponse{Yes: isBetExist, Id: betID}, nil
 }
 
 // IsBetResolved - used by GRPC
@@ -121,10 +123,12 @@ func (s *BetsService) IsBetResolved(ctx context.Context, in *pb.IsBetResolvedReq
 		return nil, err
 	}
 
+	var betID int64
 	isBetExist := false
 	if len(resp) > 0 {
+		betID = resp[0].ID
 		isBetExist = true
 	}
 
-	return &pb.IsBetResolvedResponse{Yes: isBetExist, Id: resp[0].ID}, nil
+	return &pb.IsBetResolvedResponse{Yes: isBetExist, Id: betID}, nil
 }

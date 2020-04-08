@@ -16,7 +16,7 @@ type TonWebServerConfig struct {
 	WebListenPort int32  `env:"WEB_LISTEN_PORT" envDefault:"9999"`
 	WebDomain     string `env:"WEB_DOMAIN" envDefault:"https://tonbet.io"`
 	TonAPIHost    string `env:"TON_API_HOST,required"`
-	TonAPIPort    int32  `env:"TON_API_PORT envDefault:"5400"`
+	TonAPIPort    int32  `env:"TON_API_PORT" envDefault:"5400"`
 }
 
 func GetConfig() TonWebServerConfig {

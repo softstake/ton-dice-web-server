@@ -29,7 +29,7 @@ func NewWebserver(s *bets.BetsService, cfg *config.TonWebServerConfig) *Webserve
 		grpc.WithInsecure(),
 	}
 
-	conn, err := grpc.Dial(fmt.Sprintf("%s:%s", cfg.TonAPIHost, cfg.TonAPIPort), opts...)
+	conn, err := grpc.Dial(fmt.Sprintf("%s:%d", cfg.TonAPIHost, cfg.TonAPIPort), opts...)
 	if err != nil {
 		log.Fatalf("error dial: %v", err)
 	}
