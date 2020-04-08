@@ -18,7 +18,7 @@ func main() {
 	cfg := config.GetConfig()
 
 	pgConnString := fmt.Sprintf("host=%s port=%d user=%s "+
-		"password=%s dbname=%s sslmode=disable",
+		"password=%s dbname=%s sslmode=allow",
 		cfg.PgHost, cfg.PgPort, cfg.PgUser, cfg.PgPwd, cfg.PgName)
 
 	db, err := sql.Open("postgres", pgConnString)
