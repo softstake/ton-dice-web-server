@@ -17,7 +17,7 @@ docker build --build-arg GITHUB_TOKEN="$GITHUB_TOKEN" -t dice-server .
     * PG_NAME - Postgres database name, required variable, no default value.
     * PG_USER - Postgres user, required variable, no default value.
     * PG_PWD -  Postgres password, required variable, no default value.
-    * RPC_LISTEN_PORT - Listen port for GRPC server, default value is '5400'.
+    * RPC_LISTEN_PORT - Listen port for GRPC server, default value is '5300'.
     * WEB_LISTEN_PORT - Listen port for web server, default value is '9999'.
     * WEB_DOMAIN - Domain name used for CORS headers, default value is 'tonbet.io'.
     * TON_API_HOST  - Host of the 'ton-api' service, requred variable, no default value.

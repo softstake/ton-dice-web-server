@@ -12,11 +12,11 @@ type TonWebServerConfig struct {
 	PgName        string `env:"PG_NAME,required"`
 	PgUser        string `env:"PG_USER,required"`
 	PgPwd         string `env:"PG_PWD,required"`
-	RPCListenPort int32  `env:"RPC_LISTEN_PORT" envDefault:"5400"`
+	RPCListenPort int32  `env:"RPC_LISTEN_PORT" envDefault:"5300"`
 	WebListenPort int32  `env:"WEB_LISTEN_PORT" envDefault:"9999"`
 	WebDomain     string `env:"WEB_DOMAIN" envDefault:"tonbet.io"`
-	TonAPIHost    int32  `env:"TON_API_HOST,required"`
-	TonAPIPort    int32  `env:"TON_API_PORT,required"`
+	TonAPIHost    string `env:"TON_API_HOST,required"`
+	TonAPIPort    int32  `env:"TON_API_PORT envDefault:"5400"`
 }
 
 func GetConfig() TonWebServerConfig {

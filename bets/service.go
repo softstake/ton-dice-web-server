@@ -104,7 +104,7 @@ func (s *BetsService) IsBetFetched(ctx context.Context, in *pb.IsBetFetchedReque
 		isBetExist = true
 	}
 
-	return &pb.IsBetFetchedResponse{Yes: isBetExist}, nil
+	return &pb.IsBetFetchedResponse{Yes: isBetExist, Id: resp[0].ID}, nil
 }
 
 // IsBetResolved - used by GRPC
@@ -126,5 +126,5 @@ func (s *BetsService) IsBetResolved(ctx context.Context, in *pb.IsBetResolvedReq
 		isBetExist = true
 	}
 
-	return &pb.IsBetResolvedResponse{Yes: isBetExist}, nil
+	return &pb.IsBetResolvedResponse{Yes: isBetExist, Id: resp[0].ID}, nil
 }

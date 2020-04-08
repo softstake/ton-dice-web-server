@@ -18,9 +18,9 @@ func (r InitReq) Query() string {
 			created_at TIMESTAMP WITH TIME ZONE not null,
 			create_trx_hash TEXT not null,
 			create_trx_lt BIGINT not null,
-			resolved_at TIMESTAMP WITH TIME ZONE not null,
-			resolve_trx_hash TEXT not null,
-			resolve_trx_lt BIGINT not null,
+			resolved_at TIMESTAMP WITH TIME ZONE,
+			resolve_trx_hash TEXT,
+			resolve_trx_lt BIGINT,
 			PRIMARY KEY(id, game_id)
 		)`
 }

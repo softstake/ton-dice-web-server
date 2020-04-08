@@ -51,6 +51,7 @@ message IsBetFetchedRequest {
 
 message IsBetFetchedResponse {
     bool yes = 1;
+    int32 id = 2;
 }
 
 message IsBetResolvedRequest {
@@ -61,4 +62,5 @@ message IsBetResolvedRequest {
 
 message IsBetResolvedResponse {
     bool yes = 1;
+    int32 id = 2;
 }
