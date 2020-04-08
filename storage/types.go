@@ -2,6 +2,7 @@ package storage
 
 import (
 	"context"
+	"database/sql"
 	"time"
 )
 
@@ -16,23 +17,24 @@ type Store interface {
 }
 
 type Bet struct {
-	ID             int32     `sql:"id"`
-	GameID         int32     `sql:"game_id"`
-	PlayerAddress  string    `sql:"player_address"`
-	RefAddress     string    `sql:"ref_address"`
-	Amount         int64     `sql:"amount"`
-	RollUnder      int8      `sql:"roll_under"`
-	RandomRoll     int8      `sql:"random_roll"`
-	Seed           string    `sql:"seed"`
-	Signature      string    `sql:"signature"`
-	PlayerPayout   int64     `sql:"player_payout"`
-	RefPayout      int64     `sql:"ref_payout"`
-	CreatedAt      time.Time `sql:"created_at"`
-	CreateTrxHash  string    `sql:"create_trx_hash"`
-	CreateTrxLt    int64     `sql:"create_trx_lt"`
-	ResolvedAt     time.Time `sql:"resolved_at"`
-	ResolveTrxHash string    `sql:"resolve_trx_hash"`
-	ResolveTrxLt   int64     `sql:"resolve_trx_lt"`
+	ID            int64     `sql:"id"`
+	GameID        int32     `sql:"game_id"`
+	PlayerAddress string    `sql:"player_address"`
+	RefAddress    string    `sql:"ref_address"`
+	Amount        int64     `sql:"amount"`
+	RollUnder     int8      `sql:"roll_under"`
+	CreatedAt     time.Time `sql:"created_at"`
+	CreateTrxHash string    `sql:"create_trx_hash"`
+	CreateTrxLt   int64     `sql:"create_trx_lt"`
+
+	RandomRoll     sql.NullInt32  `sql:"random_roll"`
+	Seed           sql.NullString `sql:"seed"`
+	Signature      sql.NullString `sql:"signature"`
+	PlayerPayout   sql.NullInt64  `sql:"player_payout"`
+	RefPayout      sql.NullInt64  `sql:"ref_payout"`
+	ResolvedAt     sql.NullTime   `sql:"resolved_at"`
+	ResolveTrxHash sql.NullString `sql:"resolve_trx_hash"`
+	ResolveTrxLt   sql.NullInt64  `sql:"resolve_trx_lt"`
 }
 
 type InitReq struct{}
@@ -54,7 +56,7 @@ type CreateBetResp struct {
 }
 
 type UpdateBetReq struct {
-	ID             int32  `sql:"id"`
+	ID             int64  `sql:"id"`
 	GameID         int32  `sql:"game_id"`
 	RandomRoll     int8   `sql:"random_roll"`
 	Signature      string `sql:"signature"`

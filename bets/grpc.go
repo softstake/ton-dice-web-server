@@ -24,7 +24,7 @@ func NewGRPCServer(s *BetsService, cfg *config.TonWebServerConfig) *GRPCServer {
 }
 
 func (s *GRPCServer) Start() {
-	listener, err := net.Listen("tcp", fmt.Sprint(":%d", s.config.RPCListenPort))
+	listener, err := net.Listen("tcp", fmt.Sprintf(":%d", s.config.RPCListenPort))
 	if err != nil {
 		log.Fatal("failed to listen: ", err)
 	}

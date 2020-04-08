@@ -28,7 +28,7 @@ message CreateBetResponse {
 }
 
 message UpdateBetRequest {
-    int32 id = 1;
+    int64 id = 1;
     int32 game_id = 2;
     int32 random_roll = 3;
     string signature = 4;
@@ -51,6 +51,7 @@ message IsBetFetchedRequest {
 
 message IsBetFetchedResponse {
     bool yes = 1;
+    int64 id = 2;
 }
 
 message IsBetResolvedRequest {
@@ -61,4 +62,5 @@ message IsBetResolvedRequest {
 
 message IsBetResolvedResponse {
     bool yes = 1;
+    int64 id = 2;
 }
