@@ -17,7 +17,7 @@ type Store interface {
 }
 
 type Bet struct {
-	ID            int32     `sql:"id"`
+	ID            int64     `sql:"id"`
 	GameID        int32     `sql:"game_id"`
 	PlayerAddress string    `sql:"player_address"`
 	RefAddress    string    `sql:"ref_address"`
@@ -56,7 +56,7 @@ type CreateBetResp struct {
 }
 
 type UpdateBetReq struct {
-	ID             int32  `sql:"id"`
+	ID             int64  `sql:"id"`
 	GameID         int32  `sql:"game_id"`
 	RandomRoll     int8   `sql:"random_roll"`
 	Signature      string `sql:"signature"`
