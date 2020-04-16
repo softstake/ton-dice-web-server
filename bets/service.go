@@ -117,7 +117,7 @@ func (s *BetsService) IsBetResolved(ctx context.Context, in *pb.IsBetResolvedReq
 	}
 
 	isResolved := false
-	if resp[0].RandomRoll > 0 {
+	if resp[0].RandomRoll.Int32 > 0 {
 		isResolved = true
 	}
 
