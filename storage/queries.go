@@ -4,7 +4,7 @@ package storage
 
 func (r InitReq) Query() string {
 	return `create table IF NOT EXISTS bets (
-			id INTEGER not null,
+			id INTEGER PRIMARY KEY,
 			player_address VARCHAR (48) not null,
 			ref_address VARCHAR (48) not null,
 			amount BIGINT not null,
@@ -19,8 +19,7 @@ func (r InitReq) Query() string {
 			create_trx_lt BIGINT not null,
 			resolved_at TIMESTAMP WITH TIME ZONE,
 			resolve_trx_hash TEXT,
-			resolve_trx_lt BIGINT,
-			PRIMARY KEY(id)
+			resolve_trx_lt BIGINT
 		)`
 }
 
