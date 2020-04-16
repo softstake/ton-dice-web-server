@@ -12,24 +12,22 @@ type Store interface {
 	UpdateBet(ctx context.Context, req UpdateBetReq) (*UpdateBetResp, error)
 	GetAllBets(ctx context.Context, req GetAllBetsReq) (GetAllBetsResp, error)
 	GetPlayerBets(ctx context.Context, req GetPlayerBetsReq) (GetPlayerBetsResp, error)
-	GetFetchedBet(ctx context.Context, req GetFetchedBetsReq) (GetFetchedBetsResp, error)
-	GetResolvedBet(ctx context.Context, req GetResolvedBetsReq) (GetResolvedBetsResp, error)
+	GetBet(ctx context.Context, req GetBetReq) (GetBetResp, error)
 }
 
 type Bet struct {
-	ID            int64     `sql:"id"`
-	GameID        int32     `sql:"game_id"`
-	PlayerAddress string    `sql:"player_address"`
-	RefAddress    string    `sql:"ref_address"`
+	ID            int32     `sql:"id"`
 	Amount        int64     `sql:"amount"`
 	RollUnder     int8      `sql:"roll_under"`
+	PlayerAddress string    `sql:"player_address"`
+	RefAddress    string    `sql:"ref_address"`
+	Seed          string    `sql:"seed"`
 	CreatedAt     time.Time `sql:"created_at"`
 	CreateTrxHash string    `sql:"create_trx_hash"`
 	CreateTrxLt   int64     `sql:"create_trx_lt"`
 
-	RandomRoll     sql.NullInt32  `sql:"random_roll"`
-	Seed           sql.NullString `sql:"seed"`
 	Signature      sql.NullString `sql:"signature"`
+	RandomRoll     sql.NullInt32  `sql:"random_roll"`
 	PlayerPayout   sql.NullInt64  `sql:"player_payout"`
 	RefPayout      sql.NullInt64  `sql:"ref_payout"`
 	ResolvedAt     sql.NullTime   `sql:"resolved_at"`
@@ -40,7 +38,7 @@ type Bet struct {
 type InitReq struct{}
 
 type CreateBetReq struct {
-	GameID        int32  `sql:"game_id"`
+	ID            int32  `sql:"id"`
 	PlayerAddress string `sql:"player_address"`
 	RefAddress    string `sql:"ref_address"`
 	Amount        int64  `sql:"amount"`
@@ -51,13 +49,12 @@ type CreateBetReq struct {
 }
 
 type CreateBetResp struct {
-	ID        int64     `sql:"id"`
+	ID        int32     `sql:"id"`
 	CreatedAt time.Time `sql:"created_at"`
 }
 
 type UpdateBetReq struct {
-	ID             int64  `sql:"id"`
-	GameID         int32  `sql:"game_id"`
+	ID             int32  `sql:"id"`
 	RandomRoll     int8   `sql:"random_roll"`
 	Signature      string `sql:"signature"`
 	PlayerPayout   int64  `sql:"player_payout"`
@@ -67,7 +64,7 @@ type UpdateBetReq struct {
 }
 
 type UpdateBetResp struct {
-	ID         int64     `sql:"id"`
+	ID         int32     `sql:"id"`
 	ResolvedAt time.Time `sql:"resolved_at"`
 }
 
@@ -81,18 +78,8 @@ type GetPlayerBetsReq struct {
 
 type GetPlayerBetsResp []*Bet
 
-type GetFetchedBetsReq struct {
-	GameID        int32  `sql:"game_id"`
-	CreateTrxHash string `sql:"create_trx_hash"`
-	CreateTrxLt   int64  `sql:"create_trx_lt"`
+type GetBetReq struct {
+	ID int32 `sql:"id"`
 }
 
-type GetFetchedBetsResp []*Bet
-
-type GetResolvedBetsReq struct {
-	GameID         int32  `sql:"game_id"`
-	ResolveTrxHash string `sql:"resolve_trx_hash"`
-	ResolveTrxLt   int64  `sql:"resolve_trx_lt"`
-}
-
-type GetResolvedBetsResp []*Bet
+type GetBetResp []*Bet
