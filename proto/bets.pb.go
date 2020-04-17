@@ -26,7 +26,7 @@ var _ = math.Inf
 const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
 type CreateBetRequest struct {
-	GameId               int32    `protobuf:"varint,1,opt,name=game_id,json=gameId,proto3" json:"game_id,omitempty"`
+	Id                   int32    `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	PlayerAddress        string   `protobuf:"bytes,2,opt,name=player_address,json=playerAddress,proto3" json:"player_address,omitempty"`
 	RefAddress           string   `protobuf:"bytes,3,opt,name=ref_address,json=refAddress,proto3" json:"ref_address,omitempty"`
 	Amount               int64    `protobuf:"varint,4,opt,name=amount,proto3" json:"amount,omitempty"`
@@ -64,9 +64,9 @@ func (m *CreateBetRequest) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_CreateBetRequest proto.InternalMessageInfo
 
-func (m *CreateBetRequest) GetGameId() int32 {
+func (m *CreateBetRequest) GetId() int32 {
 	if m != nil {
-		return m.GameId
+		return m.Id
 	}
 	return 0
 }
@@ -121,7 +121,7 @@ func (m *CreateBetRequest) GetCreateTrxLt() int64 {
 }
 
 type CreateBetResponse struct {
-	Id                   int64                `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id                   int32                `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	CreatedAt            *timestamp.Timestamp `protobuf:"bytes,2,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}             `json:"-"`
 	XXX_unrecognized     []byte               `json:"-"`
@@ -153,7 +153,7 @@ func (m *CreateBetResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_CreateBetResponse proto.InternalMessageInfo
 
-func (m *CreateBetResponse) GetId() int64 {
+func (m *CreateBetResponse) GetId() int32 {
 	if m != nil {
 		return m.Id
 	}
@@ -168,14 +168,13 @@ func (m *CreateBetResponse) GetCreatedAt() *timestamp.Timestamp {
 }
 
 type UpdateBetRequest struct {
-	Id                   int64    `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	GameId               int32    `protobuf:"varint,2,opt,name=game_id,json=gameId,proto3" json:"game_id,omitempty"`
-	RandomRoll           int32    `protobuf:"varint,3,opt,name=random_roll,json=randomRoll,proto3" json:"random_roll,omitempty"`
-	Signature            string   `protobuf:"bytes,4,opt,name=signature,proto3" json:"signature,omitempty"`
-	PlayerPayout         int64    `protobuf:"varint,5,opt,name=player_payout,json=playerPayout,proto3" json:"player_payout,omitempty"`
-	RefPayout            int64    `protobuf:"varint,6,opt,name=ref_payout,json=refPayout,proto3" json:"ref_payout,omitempty"`
-	ResolveTrxHash       string   `protobuf:"bytes,7,opt,name=resolve_trx_hash,json=resolveTrxHash,proto3" json:"resolve_trx_hash,omitempty"`
-	ResolveTrxLt         int64    `protobuf:"varint,8,opt,name=resolve_trx_lt,json=resolveTrxLt,proto3" json:"resolve_trx_lt,omitempty"`
+	Id                   int32    `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	RandomRoll           int32    `protobuf:"varint,2,opt,name=random_roll,json=randomRoll,proto3" json:"random_roll,omitempty"`
+	Signature            string   `protobuf:"bytes,3,opt,name=signature,proto3" json:"signature,omitempty"`
+	PlayerPayout         int64    `protobuf:"varint,4,opt,name=player_payout,json=playerPayout,proto3" json:"player_payout,omitempty"`
+	RefPayout            int64    `protobuf:"varint,5,opt,name=ref_payout,json=refPayout,proto3" json:"ref_payout,omitempty"`
+	ResolveTrxHash       string   `protobuf:"bytes,6,opt,name=resolve_trx_hash,json=resolveTrxHash,proto3" json:"resolve_trx_hash,omitempty"`
+	ResolveTrxLt         int64    `protobuf:"varint,7,opt,name=resolve_trx_lt,json=resolveTrxLt,proto3" json:"resolve_trx_lt,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -206,16 +205,9 @@ func (m *UpdateBetRequest) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_UpdateBetRequest proto.InternalMessageInfo
 
-func (m *UpdateBetRequest) GetId() int64 {
+func (m *UpdateBetRequest) GetId() int32 {
 	if m != nil {
 		return m.Id
-	}
-	return 0
-}
-
-func (m *UpdateBetRequest) GetGameId() int32 {
-	if m != nil {
-		return m.GameId
 	}
 	return 0
 }
@@ -263,7 +255,7 @@ func (m *UpdateBetRequest) GetResolveTrxLt() int64 {
 }
 
 type UpdateBetResponse struct {
-	Id                   int64                `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id                   int32                `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	ResolvedAt           *timestamp.Timestamp `protobuf:"bytes,2,opt,name=resolved_at,json=resolvedAt,proto3" json:"resolved_at,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}             `json:"-"`
 	XXX_unrecognized     []byte               `json:"-"`
@@ -295,7 +287,7 @@ func (m *UpdateBetResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_UpdateBetResponse proto.InternalMessageInfo
 
-func (m *UpdateBetResponse) GetId() int64 {
+func (m *UpdateBetResponse) GetId() int32 {
 	if m != nil {
 		return m.Id
 	}
@@ -309,112 +301,86 @@ func (m *UpdateBetResponse) GetResolvedAt() *timestamp.Timestamp {
 	return nil
 }
 
-type IsBetFetchedRequest struct {
-	GameId               int32    `protobuf:"varint,1,opt,name=game_id,json=gameId,proto3" json:"game_id,omitempty"`
-	CreateTrxHash        string   `protobuf:"bytes,2,opt,name=create_trx_hash,json=createTrxHash,proto3" json:"create_trx_hash,omitempty"`
-	CreateTrxLt          int64    `protobuf:"varint,3,opt,name=create_trx_lt,json=createTrxLt,proto3" json:"create_trx_lt,omitempty"`
+type IsBetCreatedRequest struct {
+	Id                   int32    `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *IsBetFetchedRequest) Reset()         { *m = IsBetFetchedRequest{} }
-func (m *IsBetFetchedRequest) String() string { return proto.CompactTextString(m) }
-func (*IsBetFetchedRequest) ProtoMessage()    {}
-func (*IsBetFetchedRequest) Descriptor() ([]byte, []int) {
+func (m *IsBetCreatedRequest) Reset()         { *m = IsBetCreatedRequest{} }
+func (m *IsBetCreatedRequest) String() string { return proto.CompactTextString(m) }
+func (*IsBetCreatedRequest) ProtoMessage()    {}
+func (*IsBetCreatedRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_aa99872e6a2a7bdc, []int{4}
 }
 
-func (m *IsBetFetchedRequest) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_IsBetFetchedRequest.Unmarshal(m, b)
+func (m *IsBetCreatedRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_IsBetCreatedRequest.Unmarshal(m, b)
 }
-func (m *IsBetFetchedRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_IsBetFetchedRequest.Marshal(b, m, deterministic)
+func (m *IsBetCreatedRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_IsBetCreatedRequest.Marshal(b, m, deterministic)
 }
-func (m *IsBetFetchedRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_IsBetFetchedRequest.Merge(m, src)
+func (m *IsBetCreatedRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_IsBetCreatedRequest.Merge(m, src)
 }
-func (m *IsBetFetchedRequest) XXX_Size() int {
-	return xxx_messageInfo_IsBetFetchedRequest.Size(m)
+func (m *IsBetCreatedRequest) XXX_Size() int {
+	return xxx_messageInfo_IsBetCreatedRequest.Size(m)
 }
-func (m *IsBetFetchedRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_IsBetFetchedRequest.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_IsBetFetchedRequest proto.InternalMessageInfo
-
-func (m *IsBetFetchedRequest) GetGameId() int32 {
-	if m != nil {
-		return m.GameId
-	}
-	return 0
+func (m *IsBetCreatedRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_IsBetCreatedRequest.DiscardUnknown(m)
 }
 
-func (m *IsBetFetchedRequest) GetCreateTrxHash() string {
-	if m != nil {
-		return m.CreateTrxHash
-	}
-	return ""
-}
+var xxx_messageInfo_IsBetCreatedRequest proto.InternalMessageInfo
 
-func (m *IsBetFetchedRequest) GetCreateTrxLt() int64 {
-	if m != nil {
-		return m.CreateTrxLt
-	}
-	return 0
-}
-
-type IsBetFetchedResponse struct {
-	Yes                  bool     `protobuf:"varint,1,opt,name=yes,proto3" json:"yes,omitempty"`
-	Id                   int64    `protobuf:"varint,2,opt,name=id,proto3" json:"id,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *IsBetFetchedResponse) Reset()         { *m = IsBetFetchedResponse{} }
-func (m *IsBetFetchedResponse) String() string { return proto.CompactTextString(m) }
-func (*IsBetFetchedResponse) ProtoMessage()    {}
-func (*IsBetFetchedResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_aa99872e6a2a7bdc, []int{5}
-}
-
-func (m *IsBetFetchedResponse) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_IsBetFetchedResponse.Unmarshal(m, b)
-}
-func (m *IsBetFetchedResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_IsBetFetchedResponse.Marshal(b, m, deterministic)
-}
-func (m *IsBetFetchedResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_IsBetFetchedResponse.Merge(m, src)
-}
-func (m *IsBetFetchedResponse) XXX_Size() int {
-	return xxx_messageInfo_IsBetFetchedResponse.Size(m)
-}
-func (m *IsBetFetchedResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_IsBetFetchedResponse.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_IsBetFetchedResponse proto.InternalMessageInfo
-
-func (m *IsBetFetchedResponse) GetYes() bool {
-	if m != nil {
-		return m.Yes
-	}
-	return false
-}
-
-func (m *IsBetFetchedResponse) GetId() int64 {
+func (m *IsBetCreatedRequest) GetId() int32 {
 	if m != nil {
 		return m.Id
 	}
 	return 0
 }
 
+type IsBetCreatedResponse struct {
+	Yes                  bool     `protobuf:"varint,1,opt,name=yes,proto3" json:"yes,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *IsBetCreatedResponse) Reset()         { *m = IsBetCreatedResponse{} }
+func (m *IsBetCreatedResponse) String() string { return proto.CompactTextString(m) }
+func (*IsBetCreatedResponse) ProtoMessage()    {}
+func (*IsBetCreatedResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_aa99872e6a2a7bdc, []int{5}
+}
+
+func (m *IsBetCreatedResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_IsBetCreatedResponse.Unmarshal(m, b)
+}
+func (m *IsBetCreatedResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_IsBetCreatedResponse.Marshal(b, m, deterministic)
+}
+func (m *IsBetCreatedResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_IsBetCreatedResponse.Merge(m, src)
+}
+func (m *IsBetCreatedResponse) XXX_Size() int {
+	return xxx_messageInfo_IsBetCreatedResponse.Size(m)
+}
+func (m *IsBetCreatedResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_IsBetCreatedResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_IsBetCreatedResponse proto.InternalMessageInfo
+
+func (m *IsBetCreatedResponse) GetYes() bool {
+	if m != nil {
+		return m.Yes
+	}
+	return false
+}
+
 type IsBetResolvedRequest struct {
-	GameId               int32    `protobuf:"varint,1,opt,name=game_id,json=gameId,proto3" json:"game_id,omitempty"`
-	ResolveTrxHash       string   `protobuf:"bytes,2,opt,name=resolve_trx_hash,json=resolveTrxHash,proto3" json:"resolve_trx_hash,omitempty"`
-	ResolveTrxLt         int64    `protobuf:"varint,3,opt,name=resolve_trx_lt,json=resolveTrxLt,proto3" json:"resolve_trx_lt,omitempty"`
+	Id                   int32    `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -445,30 +411,15 @@ func (m *IsBetResolvedRequest) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_IsBetResolvedRequest proto.InternalMessageInfo
 
-func (m *IsBetResolvedRequest) GetGameId() int32 {
+func (m *IsBetResolvedRequest) GetId() int32 {
 	if m != nil {
-		return m.GameId
-	}
-	return 0
-}
-
-func (m *IsBetResolvedRequest) GetResolveTrxHash() string {
-	if m != nil {
-		return m.ResolveTrxHash
-	}
-	return ""
-}
-
-func (m *IsBetResolvedRequest) GetResolveTrxLt() int64 {
-	if m != nil {
-		return m.ResolveTrxLt
+		return m.Id
 	}
 	return 0
 }
 
 type IsBetResolvedResponse struct {
 	Yes                  bool     `protobuf:"varint,1,opt,name=yes,proto3" json:"yes,omitempty"`
-	Id                   int64    `protobuf:"varint,2,opt,name=id,proto3" json:"id,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -506,20 +457,13 @@ func (m *IsBetResolvedResponse) GetYes() bool {
 	return false
 }
 
-func (m *IsBetResolvedResponse) GetId() int64 {
-	if m != nil {
-		return m.Id
-	}
-	return 0
-}
-
 func init() {
 	proto.RegisterType((*CreateBetRequest)(nil), "bets.CreateBetRequest")
 	proto.RegisterType((*CreateBetResponse)(nil), "bets.CreateBetResponse")
 	proto.RegisterType((*UpdateBetRequest)(nil), "bets.UpdateBetRequest")
 	proto.RegisterType((*UpdateBetResponse)(nil), "bets.UpdateBetResponse")
-	proto.RegisterType((*IsBetFetchedRequest)(nil), "bets.IsBetFetchedRequest")
-	proto.RegisterType((*IsBetFetchedResponse)(nil), "bets.IsBetFetchedResponse")
+	proto.RegisterType((*IsBetCreatedRequest)(nil), "bets.IsBetCreatedRequest")
+	proto.RegisterType((*IsBetCreatedResponse)(nil), "bets.IsBetCreatedResponse")
 	proto.RegisterType((*IsBetResolvedRequest)(nil), "bets.IsBetResolvedRequest")
 	proto.RegisterType((*IsBetResolvedResponse)(nil), "bets.IsBetResolvedResponse")
 }
@@ -527,44 +471,41 @@ func init() {
 func init() { proto.RegisterFile("bets.proto", fileDescriptor_aa99872e6a2a7bdc) }
 
 var fileDescriptor_aa99872e6a2a7bdc = []byte{
-	// 585 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x94, 0x4d, 0x6f, 0xd3, 0x4c,
-	0x10, 0xc7, 0x1b, 0x3b, 0x4d, 0xeb, 0x69, 0x92, 0x27, 0xdd, 0x07, 0x5a, 0x63, 0x40, 0x8d, 0xcc,
-	0x8b, 0x72, 0x4a, 0xa5, 0x72, 0xa1, 0x42, 0x42, 0x4a, 0x90, 0x80, 0xa2, 0x1e, 0xd0, 0xaa, 0xbd,
-	0x62, 0x36, 0xf5, 0xe4, 0x45, 0x72, 0xb2, 0x66, 0x77, 0x8d, 0x1a, 0x2e, 0xdc, 0x39, 0xf0, 0x05,
-	0xf8, 0xb2, 0xc8, 0xbb, 0xb6, 0xeb, 0x24, 0x46, 0xcd, 0xcd, 0xfe, 0xef, 0x7f, 0x76, 0x66, 0x7e,
-	0x33, 0x36, 0xc0, 0x08, 0x95, 0xec, 0xc7, 0x82, 0x2b, 0x4e, 0xea, 0xe9, 0xb3, 0x77, 0x32, 0xe1,
-	0x7c, 0x12, 0xe1, 0xa9, 0xd6, 0x46, 0xc9, 0xf8, 0x54, 0xcd, 0xe6, 0x28, 0x15, 0x9b, 0xc7, 0xc6,
-	0xe6, 0xff, 0xb2, 0xa0, 0xf3, 0x4e, 0x20, 0x53, 0x38, 0x44, 0x45, 0xf1, 0x5b, 0x82, 0x52, 0x91,
-	0x63, 0xd8, 0x9b, 0xb0, 0x39, 0x06, 0xb3, 0xd0, 0xad, 0x75, 0x6b, 0xbd, 0x5d, 0xda, 0x48, 0x5f,
-	0x2f, 0x42, 0xf2, 0x02, 0xda, 0x71, 0xc4, 0x96, 0x28, 0x02, 0x16, 0x86, 0x02, 0xa5, 0x74, 0xad,
-	0x6e, 0xad, 0xe7, 0xd0, 0x96, 0x51, 0x07, 0x46, 0x24, 0x27, 0x70, 0x20, 0x70, 0x5c, 0x78, 0x6c,
-	0xed, 0x01, 0x81, 0xe3, 0xdc, 0x70, 0x04, 0x0d, 0x36, 0xe7, 0xc9, 0x42, 0xb9, 0xf5, 0x6e, 0xad,
-	0x67, 0xd3, 0xec, 0x8d, 0x3c, 0x05, 0x10, 0x3c, 0x8a, 0x82, 0x64, 0x11, 0xa2, 0x70, 0x77, 0x75,
-	0x6e, 0x27, 0x55, 0xae, 0x53, 0x81, 0x10, 0xa8, 0x4b, 0xc4, 0xd0, 0x6d, 0xe8, 0x0b, 0xf5, 0x33,
-	0x79, 0x09, 0xff, 0xdd, 0xe8, 0xfa, 0x03, 0x25, 0x6e, 0x83, 0x29, 0x93, 0x53, 0x77, 0xcf, 0xd4,
-	0x64, 0xe4, 0x2b, 0x71, 0xfb, 0x91, 0xc9, 0x29, 0xf1, 0xa1, 0x55, 0xf2, 0x45, 0xca, 0xdd, 0xd7,
-	0x99, 0x0f, 0x0a, 0xd7, 0xa5, 0xf2, 0xbf, 0xc0, 0x61, 0x89, 0x85, 0x8c, 0xf9, 0x42, 0x22, 0x69,
-	0x83, 0x95, 0x71, 0xb0, 0xa9, 0x35, 0x0b, 0xc9, 0x39, 0x80, 0x89, 0x09, 0x03, 0xa6, 0x74, 0xff,
-	0x07, 0x67, 0x5e, 0xdf, 0x70, 0xee, 0xe7, 0x9c, 0xfb, 0x57, 0x39, 0x67, 0xea, 0x64, 0xee, 0x81,
-	0xf2, 0x7f, 0x5b, 0xd0, 0xb9, 0x8e, 0xc3, 0x55, 0xd8, 0xeb, 0xf7, 0x97, 0xe0, 0x5b, 0x2b, 0xf0,
-	0x53, 0xaa, 0x6c, 0x11, 0xf2, 0x79, 0x90, 0x12, 0xd1, 0x54, 0x77, 0x29, 0x18, 0x89, 0xf2, 0x28,
-	0x22, 0x4f, 0xc0, 0x91, 0xb3, 0xc9, 0x82, 0xa9, 0x44, 0xa0, 0x06, 0xeb, 0xd0, 0x3b, 0x81, 0x3c,
-	0x83, 0x6c, 0x4a, 0x41, 0xcc, 0x96, 0x3c, 0x51, 0x1a, 0xaf, 0x4d, 0x9b, 0x46, 0xfc, 0xac, 0x35,
-	0x3d, 0x00, 0x1c, 0xe7, 0x8e, 0x86, 0x76, 0x38, 0x02, 0xc7, 0xd9, 0x71, 0x0f, 0x3a, 0x02, 0x25,
-	0x8f, 0xbe, 0x6f, 0xd0, 0x6e, 0x67, 0x7a, 0x8e, 0xfb, 0x39, 0xb4, 0xcb, 0xce, 0x82, 0x77, 0xf3,
-	0xce, 0x77, 0xa9, 0xfc, 0xaf, 0x70, 0x58, 0xe2, 0xf1, 0x0f, 0xe0, 0x6f, 0xd2, 0x6d, 0xd2, 0x41,
-	0x5b, 0x12, 0x87, 0xdc, 0x3e, 0x50, 0xfe, 0x0f, 0xf8, 0xff, 0x42, 0x0e, 0x51, 0xbd, 0x47, 0x75,
-	0x33, 0xc5, 0xf0, 0xde, 0x0d, 0xaf, 0x58, 0x27, 0x6b, 0xab, 0x75, 0xb2, 0x37, 0xd7, 0xe9, 0x35,
-	0x3c, 0x58, 0xcd, 0x9d, 0x35, 0xd8, 0x01, 0x7b, 0x89, 0x52, 0x27, 0xde, 0xa7, 0xe9, 0x63, 0xd6,
-	0xb2, 0x95, 0xb7, 0xec, 0xff, 0xcc, 0x22, 0x69, 0xd6, 0xc8, 0xbd, 0x65, 0x57, 0x0d, 0xc6, 0xda,
-	0x72, 0x30, 0x76, 0xc5, 0x60, 0xce, 0xe1, 0xe1, 0x5a, 0x01, 0xdb, 0xd6, 0x7e, 0xf6, 0xc7, 0x82,
-	0xfa, 0x10, 0x95, 0x24, 0x6f, 0xc1, 0x29, 0xbe, 0x26, 0x72, 0xd4, 0xd7, 0xff, 0xa6, 0xf5, 0x5f,
-	0x8d, 0x77, 0xbc, 0xa1, 0x9b, 0x44, 0xfe, 0x4e, 0x1a, 0x5f, 0x2c, 0x47, 0x1e, 0xbf, 0xfe, 0xf5,
-	0xe4, 0xf1, 0x1b, 0x5b, 0xe4, 0xef, 0x90, 0x0f, 0xd0, 0x2c, 0xe3, 0x27, 0x8f, 0x8c, 0xb5, 0x62,
-	0x1d, 0x3c, 0xaf, 0xea, 0xa8, 0xb8, 0xe8, 0x13, 0xb4, 0x56, 0x60, 0x90, 0xb2, 0x7d, 0x6d, 0x44,
-	0xde, 0xe3, 0xca, 0xb3, 0xfc, 0xae, 0x51, 0x43, 0xef, 0xeb, 0xab, 0xbf, 0x01, 0x00, 0x00, 0xff,
-	0xff, 0xfd, 0xc4, 0x33, 0x13, 0xab, 0x05, 0x00, 0x00,
+	// 529 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x93, 0x5b, 0x6f, 0xd3, 0x30,
+	0x14, 0xc7, 0xd7, 0x2b, 0xcb, 0xe9, 0x85, 0xce, 0xc0, 0x08, 0x01, 0xb4, 0x2a, 0xb0, 0xa9, 0xbc,
+	0x74, 0xd2, 0x78, 0x42, 0x48, 0x48, 0x2d, 0x0f, 0x5c, 0xb4, 0x07, 0x64, 0x6d, 0xaf, 0x04, 0x17,
+	0x9f, 0x5e, 0xa4, 0xb4, 0x0e, 0xb6, 0x83, 0xd6, 0x47, 0x3e, 0x07, 0x9f, 0x93, 0x77, 0x14, 0x3b,
+	0xce, 0xb2, 0x5e, 0x10, 0x6f, 0xce, 0xdf, 0xbf, 0x73, 0x6c, 0xff, 0xec, 0x00, 0x4c, 0x50, 0xab,
+	0x61, 0x22, 0x85, 0x16, 0xa4, 0x9e, 0x8d, 0x83, 0x93, 0x99, 0x10, 0xb3, 0x18, 0xcf, 0x4d, 0x36,
+	0x49, 0xa7, 0xe7, 0x7a, 0xb1, 0x44, 0xa5, 0xd9, 0x32, 0xb1, 0x58, 0xf8, 0xab, 0x0a, 0xbd, 0xf7,
+	0x12, 0x99, 0xc6, 0x31, 0x6a, 0x8a, 0x3f, 0x52, 0x54, 0x9a, 0x74, 0xa1, 0xba, 0xe0, 0x7e, 0xa5,
+	0x5f, 0x19, 0x34, 0x68, 0x75, 0xc1, 0xc9, 0x29, 0x74, 0x93, 0x98, 0xad, 0x51, 0x46, 0x8c, 0x73,
+	0x89, 0x4a, 0xf9, 0xd5, 0x7e, 0x65, 0xe0, 0xd1, 0x8e, 0x4d, 0x47, 0x36, 0x24, 0x27, 0xd0, 0x92,
+	0x38, 0x2d, 0x98, 0x9a, 0x61, 0x40, 0xe2, 0xd4, 0x01, 0xc7, 0xd0, 0x64, 0x4b, 0x91, 0xae, 0xb4,
+	0x5f, 0xef, 0x57, 0x06, 0x35, 0x9a, 0x7f, 0x91, 0xe7, 0x00, 0x52, 0xc4, 0x71, 0x94, 0xae, 0x38,
+	0x4a, 0xbf, 0x61, 0xd6, 0xf5, 0xb2, 0xe4, 0x3a, 0x0b, 0x08, 0x81, 0xba, 0x42, 0xe4, 0x7e, 0xd3,
+	0x34, 0x34, 0x63, 0x72, 0x06, 0xf7, 0xbf, 0x9b, 0x6d, 0x47, 0x5a, 0xde, 0x44, 0x73, 0xa6, 0xe6,
+	0xfe, 0x3d, 0xbb, 0x27, 0x1b, 0x5f, 0xc9, 0x9b, 0x8f, 0x4c, 0xcd, 0x49, 0x08, 0x9d, 0x12, 0x17,
+	0x6b, 0xff, 0xd0, 0xac, 0xdc, 0x2a, 0xa8, 0x4b, 0x1d, 0x7e, 0x85, 0xa3, 0x92, 0x02, 0x95, 0x88,
+	0x95, 0xc2, 0x2d, 0x07, 0x6f, 0x00, 0x6c, 0x0d, 0x8f, 0x98, 0x36, 0xe7, 0x6f, 0x5d, 0x04, 0x43,
+	0xab, 0x77, 0xe8, 0xf4, 0x0e, 0xaf, 0x9c, 0x5e, 0xea, 0xe5, 0xf4, 0x48, 0x87, 0x7f, 0x2a, 0xd0,
+	0xbb, 0x4e, 0xf8, 0xbf, 0x1d, 0x67, 0xf2, 0xd8, 0x8a, 0x8b, 0x65, 0x94, 0x1d, 0xdc, 0x2c, 0xd0,
+	0xa0, 0x60, 0x23, 0x2a, 0xe2, 0x98, 0x3c, 0x03, 0x4f, 0x2d, 0x66, 0x2b, 0xa6, 0x53, 0x89, 0xb9,
+	0xdb, 0xdb, 0x80, 0xbc, 0x80, 0xfc, 0x32, 0xa2, 0x84, 0xad, 0x45, 0xea, 0x0c, 0xb7, 0x6d, 0xf8,
+	0xc5, 0x64, 0xc6, 0x33, 0x4e, 0x1d, 0xd1, 0x30, 0x84, 0x27, 0x71, 0x9a, 0x4f, 0x0f, 0xa0, 0x27,
+	0x51, 0x89, 0xf8, 0x67, 0x49, 0xaa, 0x75, 0xde, 0xcd, 0x73, 0x67, 0xf5, 0x25, 0x74, 0xcb, 0x64,
+	0xac, 0x8d, 0xfc, 0x1a, 0x6d, 0xdf, 0x72, 0x97, 0x3a, 0xfc, 0x06, 0x47, 0xa5, 0x63, 0xef, 0xf1,
+	0xfa, 0x36, 0x7b, 0x34, 0xa6, 0xe8, 0x3f, 0xc5, 0x82, 0xc3, 0x47, 0x3a, 0x3c, 0x85, 0x07, 0x9f,
+	0xd4, 0x18, 0xb5, 0xbd, 0x3e, 0xbe, 0xc7, 0x6d, 0x38, 0x80, 0x87, 0x77, 0xb1, 0x7c, 0x2f, 0x3d,
+	0xa8, 0xad, 0x51, 0x19, 0xf0, 0x90, 0x66, 0xc3, 0xf0, 0x2c, 0x27, 0x69, 0xbe, 0xc6, 0xbe, 0x8e,
+	0xaf, 0xe0, 0xd1, 0x06, 0xb7, 0xaf, 0xe5, 0xc5, 0xef, 0x2a, 0xd4, 0xc7, 0xa8, 0x15, 0x79, 0x07,
+	0x5e, 0xf1, 0xcc, 0xc8, 0xf1, 0xd0, 0xfc, 0xab, 0x9b, 0xbf, 0x5e, 0xf0, 0x78, 0x2b, 0xb7, 0x8d,
+	0xc3, 0x83, 0xac, 0xbe, 0xd0, 0xe9, 0xea, 0x37, 0x9f, 0x95, 0xab, 0xdf, 0xf2, 0x1e, 0x1e, 0x90,
+	0x0f, 0xd0, 0x2e, 0x5b, 0x20, 0x4f, 0x2c, 0xba, 0x43, 0x60, 0x10, 0xec, 0x9a, 0x2a, 0x1a, 0x7d,
+	0x86, 0xce, 0x9d, 0xc3, 0x93, 0x32, 0xbe, 0x61, 0x2e, 0x78, 0xba, 0x73, 0xce, 0xf5, 0x9a, 0x34,
+	0xcd, 0x0d, 0xbf, 0xfe, 0x1b, 0x00, 0x00, 0xff, 0xff, 0xfe, 0x05, 0x71, 0xa3, 0xbb, 0x04, 0x00,
+	0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -581,7 +522,7 @@ const _ = grpc.SupportPackageIsVersion6
 type BetsClient interface {
 	CreateBet(ctx context.Context, in *CreateBetRequest, opts ...grpc.CallOption) (*CreateBetResponse, error)
 	UpdateBet(ctx context.Context, in *UpdateBetRequest, opts ...grpc.CallOption) (*UpdateBetResponse, error)
-	IsBetFetched(ctx context.Context, in *IsBetFetchedRequest, opts ...grpc.CallOption) (*IsBetFetchedResponse, error)
+	IsBetCreated(ctx context.Context, in *IsBetCreatedRequest, opts ...grpc.CallOption) (*IsBetCreatedResponse, error)
 	IsBetResolved(ctx context.Context, in *IsBetResolvedRequest, opts ...grpc.CallOption) (*IsBetResolvedResponse, error)
 }
 
@@ -611,9 +552,9 @@ func (c *betsClient) UpdateBet(ctx context.Context, in *UpdateBetRequest, opts .
 	return out, nil
 }
 
-func (c *betsClient) IsBetFetched(ctx context.Context, in *IsBetFetchedRequest, opts ...grpc.CallOption) (*IsBetFetchedResponse, error) {
-	out := new(IsBetFetchedResponse)
-	err := c.cc.Invoke(ctx, "/bets.Bets/IsBetFetched", in, out, opts...)
+func (c *betsClient) IsBetCreated(ctx context.Context, in *IsBetCreatedRequest, opts ...grpc.CallOption) (*IsBetCreatedResponse, error) {
+	out := new(IsBetCreatedResponse)
+	err := c.cc.Invoke(ctx, "/bets.Bets/IsBetCreated", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -633,7 +574,7 @@ func (c *betsClient) IsBetResolved(ctx context.Context, in *IsBetResolvedRequest
 type BetsServer interface {
 	CreateBet(context.Context, *CreateBetRequest) (*CreateBetResponse, error)
 	UpdateBet(context.Context, *UpdateBetRequest) (*UpdateBetResponse, error)
-	IsBetFetched(context.Context, *IsBetFetchedRequest) (*IsBetFetchedResponse, error)
+	IsBetCreated(context.Context, *IsBetCreatedRequest) (*IsBetCreatedResponse, error)
 	IsBetResolved(context.Context, *IsBetResolvedRequest) (*IsBetResolvedResponse, error)
 }
 
@@ -647,8 +588,8 @@ func (*UnimplementedBetsServer) CreateBet(ctx context.Context, req *CreateBetReq
 func (*UnimplementedBetsServer) UpdateBet(ctx context.Context, req *UpdateBetRequest) (*UpdateBetResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateBet not implemented")
 }
-func (*UnimplementedBetsServer) IsBetFetched(ctx context.Context, req *IsBetFetchedRequest) (*IsBetFetchedResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method IsBetFetched not implemented")
+func (*UnimplementedBetsServer) IsBetCreated(ctx context.Context, req *IsBetCreatedRequest) (*IsBetCreatedResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method IsBetCreated not implemented")
 }
 func (*UnimplementedBetsServer) IsBetResolved(ctx context.Context, req *IsBetResolvedRequest) (*IsBetResolvedResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method IsBetResolved not implemented")
@@ -694,20 +635,20 @@ func _Bets_UpdateBet_Handler(srv interface{}, ctx context.Context, dec func(inte
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Bets_IsBetFetched_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(IsBetFetchedRequest)
+func _Bets_IsBetCreated_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IsBetCreatedRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BetsServer).IsBetFetched(ctx, in)
+		return srv.(BetsServer).IsBetCreated(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/bets.Bets/IsBetFetched",
+		FullMethod: "/bets.Bets/IsBetCreated",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BetsServer).IsBetFetched(ctx, req.(*IsBetFetchedRequest))
+		return srv.(BetsServer).IsBetCreated(ctx, req.(*IsBetCreatedRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -743,8 +684,8 @@ var _Bets_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Bets_UpdateBet_Handler,
 		},
 		{
-			MethodName: "IsBetFetched",
-			Handler:    _Bets_IsBetFetched_Handler,
+			MethodName: "IsBetCreated",
+			Handler:    _Bets_IsBetCreated_Handler,
 		},
 		{
 			MethodName: "IsBetResolved",

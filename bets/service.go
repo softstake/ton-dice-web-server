@@ -33,7 +33,7 @@ func (s *BetsService) Init() error {
 // CreateBet - used by GRPC
 func (s *BetsService) CreateBet(ctx context.Context, in *pb.CreateBetRequest) (*pb.CreateBetResponse, error) {
 	req := storage.CreateBetReq{
-		GameID:        in.GameId,
+		ID:            in.Id,
 		PlayerAddress: in.PlayerAddress,
 		RefAddress:    in.RefAddress,
 		Amount:        in.Amount,
@@ -62,7 +62,6 @@ func (s *BetsService) CreateBet(ctx context.Context, in *pb.CreateBetRequest) (*
 func (s *BetsService) UpdateBet(ctx context.Context, in *pb.UpdateBetRequest) (*pb.UpdateBetResponse, error) {
 	req := storage.UpdateBetReq{
 		ID:             in.Id,
-		GameID:         in.GameId,
 		RandomRoll:     int8(in.RandomRoll),
 		PlayerPayout:   in.PlayerPayout,
 		RefPayout:      in.RefPayout,
@@ -85,50 +84,42 @@ func (s *BetsService) UpdateBet(ctx context.Context, in *pb.UpdateBetRequest) (*
 	return &pb.UpdateBetResponse{Id: resp.ID, ResolvedAt: pts}, nil
 }
 
-// IsBetFetched - used by GRPC
-func (s *BetsService) IsBetFetched(ctx context.Context, in *pb.IsBetFetchedRequest) (*pb.IsBetFetchedResponse, error) {
-	req := storage.GetFetchedBetsReq{
-		GameID:        in.GameId,
-		CreateTrxHash: in.CreateTrxHash,
-		CreateTrxLt:   in.CreateTrxLt,
+// IsBetCreated - used by GRPC
+func (s *BetsService) IsBetCreated(ctx context.Context, in *pb.IsBetCreatedRequest) (*pb.IsBetCreatedResponse, error) {
+	req := storage.GetBetReq{
+		ID: in.Id,
 	}
 
-	resp, err := s.Store.GetFetchedBet(ctx, req)
+	resp, err := s.Store.GetBet(ctx, req)
 	if err != nil {
 		log.Printf("get bet failed with %s\n", err)
 		return nil, err
 	}
 
-	var betID int64
-	isBetExist := false
+	isCreated := false
 	if len(resp) > 0 {
-		betID = resp[0].ID
-		isBetExist = true
+		isCreated = true
 	}
 
-	return &pb.IsBetFetchedResponse{Yes: isBetExist, Id: betID}, nil
+	return &pb.IsBetCreatedResponse{Yes: isCreated}, nil
 }
 
 // IsBetResolved - used by GRPC
 func (s *BetsService) IsBetResolved(ctx context.Context, in *pb.IsBetResolvedRequest) (*pb.IsBetResolvedResponse, error) {
-	req := storage.GetResolvedBetsReq{
-		GameID:         in.GameId,
-		ResolveTrxHash: in.ResolveTrxHash,
-		ResolveTrxLt:   in.ResolveTrxLt,
+	req := storage.GetBetReq{
+		ID: in.Id,
 	}
 
-	resp, err := s.Store.GetResolvedBet(ctx, req)
+	resp, err := s.Store.GetBet(ctx, req)
 	if err != nil {
 		log.Printf("get bet failed with %s\n", err)
 		return nil, err
 	}
 
-	var betID int64
-	isBetExist := false
-	if len(resp) > 0 {
-		betID = resp[0].ID
-		isBetExist = true
+	isResolved := false
+	if resp[0].RandomRoll.Int32 > 0 {
+		isResolved = true
 	}
 
-	return &pb.IsBetResolvedResponse{Yes: isBetExist, Id: betID}, nil
+	return &pb.IsBetResolvedResponse{Yes: isResolved}, nil
 }
