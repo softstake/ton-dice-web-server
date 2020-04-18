@@ -101,7 +101,7 @@ func (s *BetsService) IsBetCreated(ctx context.Context, in *pb.IsBetCreatedReque
 		isCreated = true
 	}
 
-	return &pb.IsBetCreatedResponse{Yes: isCreated}, nil
+	return &pb.IsBetCreatedResponse{IsCreated: isCreated}, nil
 }
 
 // IsBetResolved - used by GRPC
@@ -121,5 +121,5 @@ func (s *BetsService) IsBetResolved(ctx context.Context, in *pb.IsBetResolvedReq
 		isResolved = true
 	}
 
-	return &pb.IsBetResolvedResponse{Yes: isResolved}, nil
+	return &pb.IsBetResolvedResponse{IsResolved: isResolved}, nil
 }

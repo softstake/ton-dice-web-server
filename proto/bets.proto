@@ -47,7 +47,7 @@ message IsBetCreatedRequest {
 }
 
 message IsBetCreatedResponse {
-    bool yes = 1;
+    bool is_created = 1;
 }
 
 message IsBetResolvedRequest {
@@ -55,5 +55,5 @@ message IsBetResolvedRequest {
 }
 
 message IsBetResolvedResponse {
-    bool yes = 1;
+    bool is_resolved = 1;
 }
