@@ -68,20 +68,21 @@ type UpdateBetResp struct {
 	ResolvedAt time.Time `sql:"resolved_at"`
 }
 
-type GetAllBetsReq struct{}
+type GetAllBetsReq struct {
+	Limit uint64 `sql:"limit"`
+}
 
 type GetAllBetsResp []*Bet
 
 type GetPlayerBetsReq struct {
 	PlayerAddress string `sql:"player_address"`
-	Limit         uint32 `sql:"limit"`
+	Limit         uint64 `sql:"limit"`
 }
 
 type GetPlayerBetsResp []*Bet
 
 type GetBetReq struct {
-	ID    int32  `sql:"id"`
-	Limit uint32 `sql:"limit"`
+	ID int32 `sql:"id"`
 }
 
 type GetBetResp []*Bet

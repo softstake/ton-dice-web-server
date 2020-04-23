@@ -11,11 +11,18 @@ import (
 )
 
 func (w *Webserver) GetAllBets(c *gin.Context) {
-	queryLimit := 50
+	var err error
+	var queryLimit uint64
+
+	queryLimit = 50
 
 	limit := c.Query("limit")
 	if limit != "" {
-		queryLimit := strconv.FormatInt(limit, 10)
+		queryLimit, err = strconv.ParseUint(limit, 10, 64)
+		if err != nil {
+			c.JSON(400, err)
+			return
+		}
 	}
 
 	req := storage.GetAllBetsReq{Limit: queryLimit}
@@ -29,7 +36,10 @@ func (w *Webserver) GetAllBets(c *gin.Context) {
 }
 
 func (w *Webserver) GetPlayerBets(c *gin.Context) {
-	queryLimit := 50
+	var err error
+	var queryLimit uint64
+
+	queryLimit = 50
 
 	address := c.Param("address")
 	if address == "" {
@@ -38,7 +48,11 @@ func (w *Webserver) GetPlayerBets(c *gin.Context) {
 
 	limit := c.Query("limit")
 	if limit != "" {
-		queryLimit := strconv.FormatInt(limit, 10)
+		queryLimit, err = strconv.ParseUint(limit, 10, 64)
+		if err != nil {
+			c.JSON(400, err)
+			return
+		}
 	}
 
 	req := storage.GetPlayerBetsReq{
