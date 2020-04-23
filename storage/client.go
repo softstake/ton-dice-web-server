@@ -146,6 +146,7 @@ func (s *SalStore) GetAllBets(ctx context.Context, req GetAllBetsReq) (GetAllBet
 		rawQuery = req.Query()
 		reqMap   = make(sal.RowMap)
 	)
+	reqMap.AppendTo("limit", &req.Limit)
 
 	ctx = context.WithValue(ctx, sal.ContextKeyTxOpened, s.txOpened)
 	ctx = context.WithValue(ctx, sal.ContextKeyOperationType, "Query")
@@ -222,7 +223,6 @@ func (s *SalStore) GetBet(ctx context.Context, req GetBetReq) (GetBetResp, error
 		reqMap   = make(sal.RowMap)
 	)
 	reqMap.AppendTo("id", &req.ID)
-	reqMap.AppendTo("limit", &req.Limit)
 
 	ctx = context.WithValue(ctx, sal.ContextKeyTxOpened, s.txOpened)
 	ctx = context.WithValue(ctx, sal.ContextKeyOperationType, "Query")
