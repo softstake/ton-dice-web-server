@@ -3,6 +3,7 @@ package webserver
 import (
 	"context"
 	"fmt"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	api "github.com/tonradar/ton-api/proto"
@@ -10,7 +11,14 @@ import (
 )
 
 func (w *Webserver) GetAllBets(c *gin.Context) {
-	req := storage.GetAllBetsReq{}
+	queryLimit := 50
+
+	limit := c.Param("limit")
+	if limit != "" {
+		queryLimit := strconv.FormatInt(limit, 10)
+	}
+
+	req := storage.GetAllBetsReq{Limit: queryLimit}
 	resp, err := w.betsService.Store.GetAllBets(context.Background(), req)
 	if err != nil {
 		c.JSON(500, err)
@@ -21,9 +29,21 @@ func (w *Webserver) GetAllBets(c *gin.Context) {
 }
 
 func (w *Webserver) GetPlayerBets(c *gin.Context) {
+	queryLimit := 50
+
 	address := c.Param("address")
+	if address == "" {
+		c.JSON(400, "invalid address")
+	}
+
+	limit := c.Param("limit")
+	if limit != "" {
+		queryLimit := strconv.FormatInt(limit, 10)
+	}
+
 	req := storage.GetPlayerBetsReq{
 		PlayerAddress: address,
+		Limit:         queryLimit,
 	}
 	resp, err := w.betsService.Store.GetPlayerBets(context.Background(), req)
 	fmt.Printf("err: %v", err)

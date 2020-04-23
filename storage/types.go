@@ -74,12 +74,14 @@ type GetAllBetsResp []*Bet
 
 type GetPlayerBetsReq struct {
 	PlayerAddress string `sql:"player_address"`
+	Limit         uint32 `sql:"limit"`
 }
 
 type GetPlayerBetsResp []*Bet
 
 type GetBetReq struct {
-	ID int32 `sql:"id"`
+	ID    int32  `sql:"id"`
+	Limit uint32 `sql:"limit"`
 }
 
 type GetBetResp []*Bet

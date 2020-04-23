@@ -32,11 +32,11 @@ func (r UpdateBetReq) Query() string {
 }
 
 func (r GetAllBetsReq) Query() string {
-	return `SELECT * FROM bets ORDER BY id DESC`
+	return `SELECT * FROM bets ORDER BY id DESC limit @limit`
 }
 
 func (r *GetPlayerBetsReq) Query() string {
-	return "SELECT * FROM bets WHERE player_address=@player_address ORDER BY id DESC"
+	return "SELECT * FROM bets WHERE player_address=@player_address ORDER BY id DESC limit @limit"
 }
 
 func (r *GetBetReq) Query() string {
