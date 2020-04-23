@@ -13,7 +13,7 @@ import (
 func (w *Webserver) GetAllBets(c *gin.Context) {
 	queryLimit := 50
 
-	limit := c.Param("limit")
+	limit := c.Query("limit")
 	if limit != "" {
 		queryLimit := strconv.FormatInt(limit, 10)
 	}
@@ -36,7 +36,7 @@ func (w *Webserver) GetPlayerBets(c *gin.Context) {
 		c.JSON(400, "invalid address")
 	}
 
-	limit := c.Param("limit")
+	limit := c.Query("limit")
 	if limit != "" {
 		queryLimit := strconv.FormatInt(limit, 10)
 	}
@@ -57,6 +57,9 @@ func (w *Webserver) GetPlayerBets(c *gin.Context) {
 
 func (w *Webserver) GetBalance(c *gin.Context) {
 	address := c.Param("address")
+	if address == "" {
+		c.JSON(400, "invalid address")
+	}
 	getAccountStateRequest := &api.GetAccountStateRequest{
 		AccountAddress: address,
 	}
