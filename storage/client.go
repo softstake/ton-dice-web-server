@@ -414,6 +414,7 @@ func (s *SalStore) UpdateBet(ctx context.Context, req UpdateBetReq) (*UpdateBetR
 	reqMap.AppendTo("signature", &req.Signature)
 	reqMap.AppendTo("player_payout", &req.PlayerPayout)
 	reqMap.AppendTo("ref_payout", &req.RefPayout)
+	reqMap.AppendTo("resolved_at", &req.ResolvedAt)
 	reqMap.AppendTo("resolve_trx_hash", &req.ResolveTrxHash)
 	reqMap.AppendTo("resolve_trx_lt", &req.ResolveTrxLt)
 

@@ -33,8 +33,9 @@ message UpdateBetRequest {
     string signature = 3;
     int64 player_payout = 4;
     int64 ref_payout = 5;
-    string resolve_trx_hash = 6;
-    int64 resolve_trx_lt = 7;
+    google.protobuf.Timestamp resolved_at = 6;
+    string resolve_trx_hash = 7;
+    int64 resolve_trx_lt = 8;
 }
 
 message UpdateBetResponse {

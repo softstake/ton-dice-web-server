@@ -60,11 +60,17 @@ func (s *BetsService) SaveBet(ctx context.Context, in *pb.SaveBetRequest) (*pb.S
 
 // UpdateBet - used by GRPC
 func (s *BetsService) UpdateBet(ctx context.Context, in *pb.UpdateBetRequest) (*pb.UpdateBetResponse, error) {
+	resolvedAt, err := ptypes.Timestamp(in.ResolvedAt)
+	if err != nil {
+		return nil, err
+	}
+
 	req := storage.UpdateBetReq{
 		ID:             in.Id,
 		RandomRoll:     int8(in.RandomRoll),
 		PlayerPayout:   in.PlayerPayout,
 		RefPayout:      in.RefPayout,
+		ResolvedAt:     resolvedAt,
 		ResolveTrxHash: in.ResolveTrxHash,
 		ResolveTrxLt:   in.ResolveTrxLt,
 	}
@@ -117,7 +123,7 @@ func (s *BetsService) IsBetResolved(ctx context.Context, in *pb.IsBetResolvedReq
 	}
 
 	isResolved := false
-	if resp[0].RandomRoll.Int32 > 0 {
+	if len(resp) > 0 && resp[0].RandomRoll > 0 {
 		isResolved = true
 	}
 

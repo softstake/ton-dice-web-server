@@ -2,7 +2,6 @@ package storage
 
 import (
 	"context"
-	"database/sql"
 	"time"
 )
 
@@ -16,23 +15,22 @@ type Store interface {
 }
 
 type Bet struct {
-	ID            int32     `sql:"id"`
-	Amount        int64     `sql:"amount"`
-	RollUnder     int8      `sql:"roll_under"`
-	PlayerAddress string    `sql:"player_address"`
-	RefAddress    string    `sql:"ref_address"`
-	Seed          string    `sql:"seed"`
-	CreatedAt     time.Time `sql:"created_at"`
-	CreateTrxHash string    `sql:"create_trx_hash"`
-	CreateTrxLt   int64     `sql:"create_trx_lt"`
-
-	Signature      sql.NullString `sql:"signature"`
-	RandomRoll     sql.NullInt32  `sql:"random_roll"`
-	PlayerPayout   sql.NullInt64  `sql:"player_payout"`
-	RefPayout      sql.NullInt64  `sql:"ref_payout"`
-	ResolvedAt     sql.NullTime   `sql:"resolved_at"`
-	ResolveTrxHash sql.NullString `sql:"resolve_trx_hash"`
-	ResolveTrxLt   sql.NullInt64  `sql:"resolve_trx_lt"`
+	ID             int32     `sql:"id"`
+	Amount         int64     `sql:"amount"`
+	RollUnder      int8      `sql:"roll_under"`
+	PlayerAddress  string    `sql:"player_address"`
+	RefAddress     string    `sql:"ref_address"`
+	Seed           string    `sql:"seed"`
+	CreatedAt      time.Time `sql:"created_at"`
+	CreateTrxHash  string    `sql:"create_trx_hash"`
+	CreateTrxLt    int64     `sql:"create_trx_lt"`
+	Signature      string    `sql:"signature"`
+	RandomRoll     int8      `sql:"random_roll"`
+	PlayerPayout   int64     `sql:"player_payout"`
+	RefPayout      int64     `sql:"ref_payout"`
+	ResolvedAt     time.Time `sql:"resolved_at"`
+	ResolveTrxHash string    `sql:"resolve_trx_hash"`
+	ResolveTrxLt   int64     `sql:"resolve_trx_lt"`
 }
 
 type InitReq struct{}
@@ -54,13 +52,14 @@ type SaveBetResp struct {
 }
 
 type UpdateBetReq struct {
-	ID             int32  `sql:"id"`
-	RandomRoll     int8   `sql:"random_roll"`
-	Signature      string `sql:"signature"`
-	PlayerPayout   int64  `sql:"player_payout"`
-	RefPayout      int64  `sql:"ref_payout"`
-	ResolveTrxHash string `sql:"resolve_trx_hash"`
-	ResolveTrxLt   int64  `sql:"resolve_trx_lt"`
+	ID             int32     `sql:"id"`
+	RandomRoll     int8      `sql:"random_roll"`
+	Signature      string    `sql:"signature"`
+	PlayerPayout   int64     `sql:"player_payout"`
+	RefPayout      int64     `sql:"ref_payout"`
+	ResolvedAt     time.Time `sql:"resolved_at"`
+	ResolveTrxHash string    `sql:"resolve_trx_hash"`
+	ResolveTrxLt   int64     `sql:"resolve_trx_lt"`
 }
 
 type UpdateBetResp struct {

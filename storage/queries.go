@@ -9,17 +9,17 @@ func (r InitReq) Query() string {
 			ref_address VARCHAR (48) not null,
 			amount BIGINT not null,
 			roll_under SMALLINT not null,
-			random_roll SMALLINT,
+			random_roll SMALLINT not null default 0,
 			seed TEXT not null,
-			signature TEXT,
-			player_payout BIGINT,
-			ref_payout BIGINT,
+			signature TEXT not null default '',
+			player_payout BIGINT not null default 0,
+			ref_payout BIGINT not null default 0,
 			created_at TIMESTAMP WITH TIME ZONE not null,
-			create_trx_hash TEXT,
-			create_trx_lt BIGINT,
-			resolved_at TIMESTAMP WITH TIME ZONE,
-			resolve_trx_hash TEXT,
-			resolve_trx_lt BIGINT
+			create_trx_hash TEXT not null,
+			create_trx_lt BIGINT not null,
+			resolved_at TIMESTAMP WITH TIME ZONE not null,
+			resolve_trx_hash TEXT not null default '',
+			resolve_trx_lt BIGINT not null default 0
 		)`
 }
 
@@ -28,7 +28,7 @@ func (r SaveBetReq) Query() string {
 }
 
 func (r UpdateBetReq) Query() string {
-	return `UPDATE bets SET random_roll=@random_roll, signature=@signature, player_payout=@player_payout, ref_payout=@ref_payout, resolve_trx_hash=@resolve_trx_hash, resolve_trx_lt=@resolve_trx_lt, resolved_at=now() WHERE id=@id RETURNING id, resolved_at`
+	return `UPDATE bets SET random_roll=@random_roll, signature=@signature, player_payout=@player_payout, ref_payout=@ref_payout, resolve_trx_hash=@resolve_trx_hash, resolve_trx_lt=@resolve_trx_lt, resolved_at=@resolved_at WHERE id=@id RETURNING id, resolved_at`
 }
 
 func (r GetAllBetsReq) Query() string {
