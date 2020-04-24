@@ -23,7 +23,7 @@ func (r InitReq) Query() string {
 		)`
 }
 
-func (r CreateBetReq) Query() string {
+func (r SaveBetReq) Query() string {
 	return `INSERT INTO bets(id, player_address, ref_address, amount, roll_under, seed, create_trx_hash, create_trx_lt, created_at) VALUES (@id, @player_address, @ref_address, @amount, @roll_under, @seed, @create_trx_hash, @create_trx_lt, now()) RETURNING id, created_at`
 }
 

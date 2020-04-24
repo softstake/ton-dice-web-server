@@ -30,9 +30,9 @@ func (s *BetsService) Init() error {
 	return nil
 }
 
-// CreateBet - used by GRPC
-func (s *BetsService) CreateBet(ctx context.Context, in *pb.CreateBetRequest) (*pb.CreateBetResponse, error) {
-	req := storage.CreateBetReq{
+// SaveBet - used by GRPC
+func (s *BetsService) SaveBet(ctx context.Context, in *pb.SaveBetRequest) (*pb.SaveBetResponse, error) {
+	req := storage.SaveBetReq{
 		ID:            in.Id,
 		PlayerAddress: in.PlayerAddress,
 		RefAddress:    in.RefAddress,
@@ -43,7 +43,7 @@ func (s *BetsService) CreateBet(ctx context.Context, in *pb.CreateBetRequest) (*
 		CreateTrxLt:   in.CreateTrxLt,
 	}
 
-	resp, err := s.Store.CreateBet(ctx, req)
+	resp, err := s.Store.SaveBet(ctx, req)
 	if err != nil {
 		log.Printf("save bet in DB failed with %s\n", err)
 		return nil, err
@@ -55,7 +55,7 @@ func (s *BetsService) CreateBet(ctx context.Context, in *pb.CreateBetRequest) (*
 	}
 	log.Printf("bet with id %d successfully saved (date: %s)", resp.ID, resp.CreatedAt)
 
-	return &pb.CreateBetResponse{Id: resp.ID, CreatedAt: pts}, nil
+	return &pb.SaveBetResponse{Id: resp.ID, CreatedAt: pts}, nil
 }
 
 // UpdateBet - used by GRPC
@@ -85,7 +85,7 @@ func (s *BetsService) UpdateBet(ctx context.Context, in *pb.UpdateBetRequest) (*
 }
 
 // IsBetCreated - used by GRPC
-func (s *BetsService) IsBetCreated(ctx context.Context, in *pb.IsBetCreatedRequest) (*pb.IsBetCreatedResponse, error) {
+func (s *BetsService) IsBetSaved(ctx context.Context, in *pb.IsBetSavedRequest) (*pb.IsBetSavedResponse, error) {
 	req := storage.GetBetReq{
 		ID: in.Id,
 	}
@@ -96,12 +96,12 @@ func (s *BetsService) IsBetCreated(ctx context.Context, in *pb.IsBetCreatedReque
 		return nil, err
 	}
 
-	isCreated := false
+	isSaved := false
 	if len(resp) > 0 {
-		isCreated = true
+		isSaved = true
 	}
 
-	return &pb.IsBetCreatedResponse{IsCreated: isCreated}, nil
+	return &pb.IsBetSavedResponse{IsSaved: isSaved}, nil
 }
 
 // IsBetResolved - used by GRPC

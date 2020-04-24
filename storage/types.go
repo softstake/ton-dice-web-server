@@ -8,7 +8,7 @@ import (
 
 type Store interface {
 	Init(ctx context.Context, req *InitReq) error
-	CreateBet(ctx context.Context, req CreateBetReq) (*CreateBetResp, error)
+	SaveBet(ctx context.Context, req SaveBetReq) (*SaveBetResp, error)
 	UpdateBet(ctx context.Context, req UpdateBetReq) (*UpdateBetResp, error)
 	GetAllBets(ctx context.Context, req GetAllBetsReq) (GetAllBetsResp, error)
 	GetPlayerBets(ctx context.Context, req GetPlayerBetsReq) (GetPlayerBetsResp, error)
@@ -37,7 +37,7 @@ type Bet struct {
 
 type InitReq struct{}
 
-type CreateBetReq struct {
+type SaveBetReq struct {
 	ID            int32  `sql:"id"`
 	PlayerAddress string `sql:"player_address"`
 	RefAddress    string `sql:"ref_address"`
@@ -48,7 +48,7 @@ type CreateBetReq struct {
 	CreateTrxLt   int64  `sql:"create_trx_lt"`
 }
 
-type CreateBetResp struct {
+type SaveBetResp struct {
 	ID        int32     `sql:"id"`
 	CreatedAt time.Time `sql:"created_at"`
 }
