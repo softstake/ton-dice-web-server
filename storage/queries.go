@@ -5,21 +5,21 @@ package storage
 func (r InitReq) Query() string {
 	return `create table IF NOT EXISTS bets (
 			id INTEGER PRIMARY KEY,
-			player_address VARCHAR (48) not null,
-			ref_address VARCHAR (48) not null,
-			amount BIGINT not null,
-			roll_under SMALLINT not null,
-			random_roll SMALLINT not null default 0,
-			seed TEXT not null,
-			signature TEXT not null default '',
-			player_payout BIGINT not null default 0,
-			ref_payout BIGINT not null default 0,
+			player_address VARCHAR (48) NOT NULL,
+			ref_address VARCHAR (48) NOT NULL,
+			amount BIGINT NOT NULL,
+			roll_under SMALLINT NOT NULL,
+			random_roll SMALLINT NOT NULL DEFAULT 0,
+			seed TEXT NOT NULL,
+			signature TEXT NOT NULL DEFAULT '',
+			player_payout BIGINT NOT NULL DEFAULT 0,
+			ref_payout BIGINT NOT NULL DEFAULT 0,
 			created_at TIMESTAMP WITH TIME ZONE not null,
-			create_trx_hash TEXT not null,
-			create_trx_lt BIGINT not null,
-			resolved_at TIMESTAMP WITH TIME ZONE not null,
-			resolve_trx_hash TEXT not null default '',
-			resolve_trx_lt BIGINT not null default 0
+			create_trx_hash TEXT NOT NULL,
+			create_trx_lt BIGINT NOT NULL,
+			resolved_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+			resolve_trx_hash TEXT NOT NULL DEFAULT '',
+			resolve_trx_lt BIGINT NOT NULL DEFAULT 0
 		)`
 }
 
