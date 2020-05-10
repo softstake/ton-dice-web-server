@@ -5,22 +5,36 @@ package storage
 func (r InitReq) Query() string {
 	return `create table IF NOT EXISTS bets (
 			id INTEGER PRIMARY KEY,
+			amount BIGINT NOT NULL,
+			state SMALLINT NOT NULL DEFAULT 0,
+			roll_under SMALLINT NOT NULL,
 			player_address VARCHAR (48) NOT NULL,
 			ref_address VARCHAR (48) NOT NULL,
-			amount BIGINT NOT NULL,
-			roll_under SMALLINT NOT NULL,
-			random_roll SMALLINT NOT NULL DEFAULT 0,
 			seed TEXT NOT NULL,
 			signature TEXT NOT NULL DEFAULT '',
+			random_roll SMALLINT NOT NULL DEFAULT 0,
 			player_payout BIGINT NOT NULL DEFAULT 0,
 			ref_payout BIGINT NOT NULL DEFAULT 0,
 			created_at TIMESTAMP WITH TIME ZONE not null,
 			create_trx_hash TEXT NOT NULL,
 			create_trx_lt BIGINT NOT NULL,
+			updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
 			resolved_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
 			resolve_trx_hash TEXT NOT NULL DEFAULT '',
-			resolve_trx_lt BIGINT NOT NULL DEFAULT 0
-		)`
+			resolve_trx_lt BIGINT NOT NULL DEFAULT 0);
+
+			CREATE OR REPLACE FUNCTION trigger_set_timestamp()
+			RETURNS TRIGGER AS $$
+			BEGIN
+  				NEW.updated_at = NOW();
+  				RETURN NEW;
+			END;
+			$$ LANGUAGE plpgsql;
+
+			CREATE TRIGGER set_timestamp
+			BEFORE UPDATE ON bets
+			FOR EACH ROW
+			EXECUTE PROCEDURE trigger_set_timestamp();`
 }
 
 func (r SaveBetReq) Query() string {
@@ -28,7 +42,7 @@ func (r SaveBetReq) Query() string {
 }
 
 func (r UpdateBetReq) Query() string {
-	return `UPDATE bets SET random_roll=@random_roll, signature=@signature, player_payout=@player_payout, ref_payout=@ref_payout, resolve_trx_hash=@resolve_trx_hash, resolve_trx_lt=@resolve_trx_lt, resolved_at=@resolved_at WHERE id=@id RETURNING id, resolved_at`
+	return `UPDATE bets SET state=@state, random_roll=@random_roll, signature=@signature, player_payout=@player_payout, ref_payout=@ref_payout, resolve_trx_hash=@resolve_trx_hash, resolve_trx_lt=@resolve_trx_lt, resolved_at=@resolved_at WHERE id=@id RETURNING id, state, resolved_at, updated_at`
 }
 
 func (r GetAllBetsReq) Query() string {
