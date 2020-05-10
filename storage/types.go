@@ -5,6 +5,28 @@ import (
 	"time"
 )
 
+// represent bet state in code
+type BetState int
+
+const (
+	BetSaved = iota
+	BetSent
+	BetResolved
+)
+
+func BetStateFromInt32(state int32) BetState {
+	var out BetState
+	switch state {
+	case 0:
+		out = BetSaved
+	case 1:
+		out = BetSent
+	case 2:
+		out = BetResolved
+	}
+	return out
+}
+
 type Store interface {
 	Init(ctx context.Context, req *InitReq) error
 	SaveBet(ctx context.Context, req SaveBetReq) (*SaveBetResp, error)
@@ -17,18 +39,19 @@ type Store interface {
 type Bet struct {
 	ID             int32     `sql:"id"`
 	Amount         int64     `sql:"amount"`
+	State          BetState  `sql:"state"`
 	RollUnder      int8      `sql:"roll_under"`
 	PlayerAddress  string    `sql:"player_address"`
 	RefAddress     string    `sql:"ref_address"`
 	Seed           string    `sql:"seed"`
-	CreatedAt      time.Time `sql:"created_at"`
-	CreateTrxHash  string    `sql:"create_trx_hash"`
-	CreateTrxLt    int64     `sql:"create_trx_lt"`
 	Signature      string    `sql:"signature"`
 	RandomRoll     int8      `sql:"random_roll"`
 	PlayerPayout   int64     `sql:"player_payout"`
 	RefPayout      int64     `sql:"ref_payout"`
-	ResolvedAt     time.Time `sql:"resolved_at"`
+	CreatedAt      time.Time `sql:"created_at"`
+	CreateTrxHash  string    `sql:"create_trx_hash"`
+	CreateTrxLt    int64     `sql:"create_trx_lt"`
+	UpdatedAt      time.Time `sql:"updated_at"`
 	ResolveTrxHash string    `sql:"resolve_trx_hash"`
 	ResolveTrxLt   int64     `sql:"resolve_trx_lt"`
 }
@@ -48,23 +71,25 @@ type SaveBetReq struct {
 
 type SaveBetResp struct {
 	ID        int32     `sql:"id"`
-	CreatedAt time.Time `sql:"created_at"`
+	State     BetState  `sql:"state"`
+	UpdatedAt time.Time `sql:"updated_at"`
 }
 
 type UpdateBetReq struct {
-	ID             int32     `sql:"id"`
-	RandomRoll     int8      `sql:"random_roll"`
-	Signature      string    `sql:"signature"`
-	PlayerPayout   int64     `sql:"player_payout"`
-	RefPayout      int64     `sql:"ref_payout"`
-	ResolvedAt     time.Time `sql:"resolved_at"`
-	ResolveTrxHash string    `sql:"resolve_trx_hash"`
-	ResolveTrxLt   int64     `sql:"resolve_trx_lt"`
+	ID             int32    `sql:"id"`
+	State          BetState `sql:"state"`
+	RandomRoll     int8     `sql:"random_roll"`
+	Signature      string   `sql:"signature"`
+	PlayerPayout   int64    `sql:"player_payout"`
+	RefPayout      int64    `sql:"ref_payout"`
+	ResolveTrxHash string   `sql:"resolve_trx_hash"`
+	ResolveTrxLt   int64    `sql:"resolve_trx_lt"`
 }
 
 type UpdateBetResp struct {
-	ID         int32     `sql:"id"`
-	ResolvedAt time.Time `sql:"resolved_at"`
+	ID        int32     `sql:"id"`
+	State     BetState  `sql:"state"`
+	UpdatedAt time.Time `sql:"updated_at"`
 }
 
 type GetAllBetsReq struct {
@@ -84,4 +109,4 @@ type GetBetReq struct {
 	ID int32 `sql:"id"`
 }
 
-type GetBetResp []*Bet
+type GetBetResp Bet

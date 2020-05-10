@@ -49,28 +49,35 @@ func (s *BetsService) SaveBet(ctx context.Context, in *pb.SaveBetRequest) (*pb.S
 		return nil, err
 	}
 
-	pts, err := ptypes.TimestampProto(resp.CreatedAt)
+	getBetReq := storage.GetBetReq{
+		ID: in.Id,
+	}
+	bet, err := s.Store.GetBet(ctx, getBetReq)
 	if err != nil {
+		log.Printf("get bet from DB after saving is failed: %s\n", err)
 		return nil, err
 	}
-	log.Printf("bet with id %d successfully saved (date: %s)", resp.ID, resp.CreatedAt)
 
-	return &pb.SaveBetResponse{Id: resp.ID, CreatedAt: pts}, nil
+	pbUpdatedAt, err := ptypes.TimestampProto(bet.UpdatedAt)
+	if err != nil {
+		log.Println("Convert datetime error", err)
+		return nil, err
+	}
+	log.Printf("bet with id %d successfully saved (date: %s)", resp.ID, bet.CreatedAt)
+
+	return &pb.SaveBetResponse{Id: resp.ID, State: int32(bet.State), UpdatedAt: pbUpdatedAt}, nil
 }
 
 // UpdateBet - used by GRPC
 func (s *BetsService) UpdateBet(ctx context.Context, in *pb.UpdateBetRequest) (*pb.UpdateBetResponse, error) {
-	resolvedAt, err := ptypes.Timestamp(in.ResolvedAt)
-	if err != nil {
-		return nil, err
-	}
 
 	req := storage.UpdateBetReq{
 		ID:             in.Id,
+		State:          storage.BetStateFromInt32(in.State),
 		RandomRoll:     int8(in.RandomRoll),
+		Signature:      in.Signature,
 		PlayerPayout:   in.PlayerPayout,
 		RefPayout:      in.RefPayout,
-		ResolvedAt:     resolvedAt,
 		ResolveTrxHash: in.ResolveTrxHash,
 		ResolveTrxLt:   in.ResolveTrxLt,
 	}
@@ -81,13 +88,14 @@ func (s *BetsService) UpdateBet(ctx context.Context, in *pb.UpdateBetRequest) (*
 		return nil, err
 	}
 
-	pts, err := ptypes.TimestampProto(resp.ResolvedAt)
+	pbUpdatedAt, err := ptypes.TimestampProto(resp.UpdatedAt)
 	if err != nil {
+		log.Println("Convert datetime error", err)
 		return nil, err
 	}
-	log.Printf("bet with id %d successfully updated (date: %s)", resp.ID, resp.ResolvedAt)
+	log.Printf("bet with id %d successfully updated (date: %s)", resp.ID, resp.UpdatedAt)
 
-	return &pb.UpdateBetResponse{Id: resp.ID, ResolvedAt: pts}, nil
+	return &pb.UpdateBetResponse{Id: resp.ID, State: int32(resp.State), UpdatedAt: pbUpdatedAt}, nil
 }
 
 // IsBetCreated - used by GRPC
@@ -103,7 +111,8 @@ func (s *BetsService) IsBetSaved(ctx context.Context, in *pb.IsBetSavedRequest) 
 	}
 
 	isSaved := false
-	if len(resp) > 0 {
+	// check for empty struct
+	if (resp != storage.GetBetResp{}) {
 		isSaved = true
 	}
 
@@ -123,9 +132,54 @@ func (s *BetsService) IsBetResolved(ctx context.Context, in *pb.IsBetResolvedReq
 	}
 
 	isResolved := false
-	if len(resp) > 0 && resp[0].RandomRoll > 0 {
+	if resp.State == storage.BetResolved {
 		isResolved = true
 	}
 
 	return &pb.IsBetResolvedResponse{IsResolved: isResolved}, nil
+}
+
+// GetBet - used by GRPC
+func (s *BetsService) GetBet(ctx context.Context, in *pb.GetBetRequest) (*pb.GetBetResponse, error) {
+	req := storage.GetBetReq{
+		ID: in.Id,
+	}
+
+	bet, err := s.Store.GetBet(ctx, req)
+	if err != nil {
+		log.Printf("get bet from DB failed with %s\n", err)
+		return nil, err
+	}
+
+	pbCreatedAt, err := ptypes.TimestampProto(bet.CreatedAt)
+	if err != nil {
+		log.Println("Convert datetime error", err)
+		return nil, err
+	}
+
+	pbUpdatedAt, err := ptypes.TimestampProto(bet.UpdatedAt)
+	if err != nil {
+		log.Println("Convert datetime error", err)
+		return nil, err
+	}
+
+	return &pb.GetBetResponse{
+		Id:             bet.ID,
+		Amount:         bet.Amount,
+		State:          int32(bet.State),
+		RollUnder:      int32(bet.RollUnder),
+		PlayerAddress:  bet.PlayerAddress,
+		RefAddress:     bet.RefAddress,
+		Seed:           bet.Seed,
+		Signature:      bet.Signature,
+		RandomRoll:     int32(bet.RandomRoll),
+		PlayerPayout:   bet.PlayerPayout,
+		RefPayout:      bet.RefPayout,
+		CreatedAt:      pbCreatedAt,
+		CreateTrxHash:  bet.CreateTrxHash,
+		CreateTrxLt:    bet.CreateTrxLt,
+		UpdatedAt:      pbUpdatedAt,
+		ResolveTrxHash: bet.ResolveTrxHash,
+		ResolveTrxLt:   bet.ResolveTrxLt,
+	}, nil
 }
