@@ -15,11 +15,10 @@ func (r InitReq) Query() string {
 			random_roll SMALLINT NOT NULL DEFAULT 0,
 			player_payout BIGINT NOT NULL DEFAULT 0,
 			ref_payout BIGINT NOT NULL DEFAULT 0,
-			created_at TIMESTAMP WITH TIME ZONE not null,
+			created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
 			create_trx_hash TEXT NOT NULL,
 			create_trx_lt BIGINT NOT NULL,
 			updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
-			resolved_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
 			resolve_trx_hash TEXT NOT NULL DEFAULT '',
 			resolve_trx_lt BIGINT NOT NULL DEFAULT 0);
 
@@ -38,11 +37,11 @@ func (r InitReq) Query() string {
 }
 
 func (r SaveBetReq) Query() string {
-	return `INSERT INTO bets(id, player_address, ref_address, amount, roll_under, seed, create_trx_hash, create_trx_lt, created_at) VALUES (@id, @player_address, @ref_address, @amount, @roll_under, @seed, @create_trx_hash, @create_trx_lt, now()) RETURNING id, created_at`
+	return `INSERT INTO bets(id, player_address, ref_address, amount, roll_under, seed, create_trx_hash, create_trx_lt) VALUES (@id, @player_address, @ref_address, @amount, @roll_under, @seed, @create_trx_hash, @create_trx_lt RETURNING id, state, updated_at`
 }
 
 func (r UpdateBetReq) Query() string {
-	return `UPDATE bets SET state=@state, random_roll=@random_roll, signature=@signature, player_payout=@player_payout, ref_payout=@ref_payout, resolve_trx_hash=@resolve_trx_hash, resolve_trx_lt=@resolve_trx_lt, resolved_at=@resolved_at WHERE id=@id RETURNING id, state, resolved_at, updated_at`
+	return `UPDATE bets SET state=@state, random_roll=@random_roll, signature=@signature, player_payout=@player_payout, ref_payout=@ref_payout, resolve_trx_hash=@resolve_trx_hash, resolve_trx_lt=@resolve_trx_lt, WHERE id=@id RETURNING id, state, updated_at`
 }
 
 func (r GetAllBetsReq) Query() string {
@@ -54,5 +53,5 @@ func (r *GetPlayerBetsReq) Query() string {
 }
 
 func (r *GetBetReq) Query() string {
-	return "SELECT * FROM bets WHERE id=@id LIMIT 1"
+	return "SELECT * FROM bets WHERE id=@id"
 }

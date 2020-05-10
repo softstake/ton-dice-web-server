@@ -9,10 +9,23 @@ import (
 type BetState int
 
 const (
-	Saved = iota
-	Sent
-	Resolved
+	BetSaved = iota
+	BetSent
+	BetResolved
 )
+
+func BetStateFromInt32(state int32) BetState {
+	var out BetState
+	switch state {
+	case 0:
+		out = BetSaved
+	case 1:
+		out = BetSent
+	case 2:
+		out = BetResolved
+	}
+	return out
+}
 
 type Store interface {
 	Init(ctx context.Context, req *InitReq) error
@@ -39,7 +52,6 @@ type Bet struct {
 	CreateTrxHash  string    `sql:"create_trx_hash"`
 	CreateTrxLt    int64     `sql:"create_trx_lt"`
 	UpdatedAt      time.Time `sql:"updated_at"`
-	ResolvedAt     time.Time `sql:"resolved_at"`
 	ResolveTrxHash string    `sql:"resolve_trx_hash"`
 	ResolveTrxLt   int64     `sql:"resolve_trx_lt"`
 }
@@ -59,26 +71,25 @@ type SaveBetReq struct {
 
 type SaveBetResp struct {
 	ID        int32     `sql:"id"`
-	CreatedAt time.Time `sql:"created_at"`
+	State     BetState  `sql:"state"`
+	UpdatedAt time.Time `sql:"updated_at"`
 }
 
 type UpdateBetReq struct {
-	ID             int32     `sql:"id"`
-	State          BetState  `sql:"state"`
-	RandomRoll     int8      `sql:"random_roll"`
-	Signature      string    `sql:"signature"`
-	PlayerPayout   int64     `sql:"player_payout"`
-	RefPayout      int64     `sql:"ref_payout"`
-	ResolvedAt     time.Time `sql:"resolved_at"`
-	ResolveTrxHash string    `sql:"resolve_trx_hash"`
-	ResolveTrxLt   int64     `sql:"resolve_trx_lt"`
+	ID             int32    `sql:"id"`
+	State          BetState `sql:"state"`
+	RandomRoll     int8     `sql:"random_roll"`
+	Signature      string   `sql:"signature"`
+	PlayerPayout   int64    `sql:"player_payout"`
+	RefPayout      int64    `sql:"ref_payout"`
+	ResolveTrxHash string   `sql:"resolve_trx_hash"`
+	ResolveTrxLt   int64    `sql:"resolve_trx_lt"`
 }
 
 type UpdateBetResp struct {
-	ID         int32     `sql:"id"`
-	State      BetState  `sql:"state"`
-	ResolvedAt time.Time `sql:"resolved_at"`
-	UpdatedAt  time.Time `sql:"updated_at"`
+	ID        int32     `sql:"id"`
+	State     BetState  `sql:"state"`
+	UpdatedAt time.Time `sql:"updated_at"`
 }
 
 type GetAllBetsReq struct {
@@ -98,4 +109,4 @@ type GetBetReq struct {
 	ID int32 `sql:"id"`
 }
 
-type GetBetResp []*Bet
+type GetBetResp Bet

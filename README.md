@@ -8,6 +8,18 @@ export GITHUB_TOKEN = 'token'
 docker build --build-arg GITHUB_TOKEN="$GITHUB_TOKEN" -t dice-server .
 ```
 
+## codegen
+For sql client:
+```
+cd storage; salgen -destination=./client.go -package=github.com/tonradar/ton-dice-web-server/storage github.com/tonradar/ton-dice-web-server/storage Store
+```
+
+For protobug grpc:
+```
+cd proto; protoc -I . bets.proto --go_out=plugins=grpc:.
+```
+
+
 ## run (develop)
 ```docker run --name dice-server --network dice-network -e PG_HOST=pg-docker -e PG_PORT=5432 -e PG_NAME=postgres -e PG_USER=postgres -e PG_PWD=docker -e TON_API_HOST=ton-api -e TON_API_PORT=5400 -d -p 8080:9999 dice-server```
 
