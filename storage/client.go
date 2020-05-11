@@ -337,6 +337,74 @@ func (s *SalStore) Init(ctx context.Context, req *InitReq) error {
 	return nil
 }
 
+func (s *SalStore) PrepareExpressionFirst(ctx context.Context, req *PrepareExpressionFirstReq) error {
+	var (
+		err      error
+		rawQuery = req.Query()
+		reqMap   = make(sal.RowMap)
+	)
+
+	ctx = context.WithValue(ctx, sal.ContextKeyTxOpened, s.txOpened)
+	ctx = context.WithValue(ctx, sal.ContextKeyOperationType, "Exec")
+	ctx = context.WithValue(ctx, sal.ContextKeyMethodName, "PrepareExpressionFirst")
+
+	pgQuery, args := sal.ProcessQueryAndArgs(rawQuery, reqMap)
+
+	stmt, err := s.ctrl.PrepareStmt(ctx, s.parent, s.handler, pgQuery)
+	if err != nil {
+		return errors.WithStack(err)
+	}
+
+	for _, fn := range s.ctrl.BeforeQuery {
+		var fnz sal.FinalizerFunc
+		ctx, fnz = fn(ctx, rawQuery, req)
+		if fnz != nil {
+			defer func() { fnz(ctx, err) }()
+		}
+	}
+
+	_, err = stmt.ExecContext(ctx, args...)
+	if err != nil {
+		return errors.Wrap(err, "failed to execute Exec")
+	}
+
+	return nil
+}
+
+func (s *SalStore) PrepareExpressionSecond(ctx context.Context, req *PrepareExpressionSecondReq) error {
+	var (
+		err      error
+		rawQuery = req.Query()
+		reqMap   = make(sal.RowMap)
+	)
+
+	ctx = context.WithValue(ctx, sal.ContextKeyTxOpened, s.txOpened)
+	ctx = context.WithValue(ctx, sal.ContextKeyOperationType, "Exec")
+	ctx = context.WithValue(ctx, sal.ContextKeyMethodName, "PrepareExpressionSecond")
+
+	pgQuery, args := sal.ProcessQueryAndArgs(rawQuery, reqMap)
+
+	stmt, err := s.ctrl.PrepareStmt(ctx, s.parent, s.handler, pgQuery)
+	if err != nil {
+		return errors.WithStack(err)
+	}
+
+	for _, fn := range s.ctrl.BeforeQuery {
+		var fnz sal.FinalizerFunc
+		ctx, fnz = fn(ctx, rawQuery, req)
+		if fnz != nil {
+			defer func() { fnz(ctx, err) }()
+		}
+	}
+
+	_, err = stmt.ExecContext(ctx, args...)
+	if err != nil {
+		return errors.Wrap(err, "failed to execute Exec")
+	}
+
+	return nil
+}
+
 func (s *SalStore) SaveBet(ctx context.Context, req SaveBetReq) (*SaveBetResp, error) {
 	var (
 		err      error

@@ -29,6 +29,8 @@ func BetStateFromInt32(state int32) BetState {
 
 type Store interface {
 	Init(ctx context.Context, req *InitReq) error
+	PrepareExpressionFirst(ctx context.Context, req *PrepareExpressionFirstReq) error
+	PrepareExpressionSecond(ctx context.Context, req *PrepareExpressionSecondReq) error
 	SaveBet(ctx context.Context, req SaveBetReq) (*SaveBetResp, error)
 	UpdateBet(ctx context.Context, req UpdateBetReq) (*UpdateBetResp, error)
 	GetAllBets(ctx context.Context, req GetAllBetsReq) (GetAllBetsResp, error)
@@ -57,6 +59,10 @@ type Bet struct {
 }
 
 type InitReq struct{}
+
+type PrepareExpressionFirstReq struct{}
+
+type PrepareExpressionSecondReq struct{}
 
 type SaveBetReq struct {
 	ID            int32  `sql:"id"`
