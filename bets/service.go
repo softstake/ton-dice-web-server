@@ -23,7 +23,12 @@ func NewBetsService(store *storage.SalStore, cfg *config.TonWebServerConfig) *Be
 }
 
 func (s *BetsService) Init() error {
-	err := s.Store.Init(context.Background(), &storage.InitReq{})
+	ctx := context.Background()
+
+	err := s.Store.Init(ctx, &storage.InitReq{})
+	_ = s.Store.PrepareExpressionFirst(ctx, &storage.PrepareExpressionFirstReq{})
+	_ = s.Store.PrepareExpressionSecond(ctx, &storage.PrepareExpressionSecondReq{})
+
 	if err != nil {
 		return err
 	}
